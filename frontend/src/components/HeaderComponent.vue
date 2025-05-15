@@ -14,13 +14,13 @@
                 <router-link to="/inicio" class="text-white font-bold hover:underline">Inicio</router-link>
             </li>
             <li>
-                <router-link to="/servicios" class="text-white font-bold hover:underline">Servicios</router-link>
+                <router-link :to="{ name: 'servicios' }" class="text-white font-bold hover:underline">Servicios</router-link>
             </li>
             <li>
-                <router-link to="/formulario" class="text-white font-bold hover:underline">Formulario</router-link>
+                <router-link :to="{ name: 'form'}" class="text-white font-bold hover:underline">Formulario</router-link>
             </li>
             <li>
-                <router-link to="/sobre_nosotros" class="text-white font-bold hover:underline">Sobre Nosotros</router-link>
+                <router-link :to="{ name: 'sobre' }" class="text-white font-bold hover:underline">Sobre Nosotros</router-link>
             </li>
         </ul>
     </nav>
