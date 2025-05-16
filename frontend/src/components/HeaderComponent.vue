@@ -1,5 +1,15 @@
 <script setup>
 
+import { logoutUser } from '../stores/auth'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+const cerrarSesion = () => {
+    logoutUser()
+    router.push('/')
+}
+
 </script>
 
 <template>
@@ -22,6 +32,8 @@
             <li>
                 <router-link :to="{ name: 'sobre' }" class="text-white font-bold hover:underline">Sobre Nosotros</router-link>
             </li>
+
+            <button @click="cerrarSesion">Cerrar sesión</button>
         </ul>
     </nav>
 </template>
