@@ -1,5 +1,9 @@
 <script setup>
     import {ref, reactive, computed} from 'vue'
+    import { useToast } from 'vue-toastification'
+
+    // Se importa el módulo useToast de vue-toastification para mostrar notificaciones
+    const toast = useToast()
 
     // Estado Reactivo para el pedido
     // Se utiliza reactive para crear un objeto reactivo que contiene los datos del pedido
@@ -25,6 +29,22 @@
     const pedidoHecho = () =>{
         console.log(pedido);
         enviado.value = true
+        toast.success('¡Pedido Guardado con Exito!', {
+        // icon: '✅',
+        timeout: 3000
+      })
+
+      toast.info(resumen.value, {
+        // icon: '🍔',
+        timeout: 5000
+      })
+
+      // Se restablecen los valores del pedido a sus valores iniciales
+      // Esto se hace para limpiar el formulario después de enviar el pedido
+      pedido.name = ''
+      pedido.food = ''
+      pedido.amount = ''
+      pedido.address = ''
     }
 
     // Se utiliza computed para crear una propiedad computada que genera un resumen del pedido
@@ -69,12 +89,12 @@
             Enviar
           </button>
 
-          <p v-if="enviado" class="text-center text-green-700 font-semibold">
+          <!-- <p v-if="enviado" class="text-center text-green-700 font-semibold">
             ¡Gracias por su pedido!
-          </p>
-          <p v-if="enviado && pedido.name && pedido.food && pedido.amount" class="text-center text-gray-800">
+          </p> -->
+          <!-- <p v-if="enviado && pedido.name && pedido.food && pedido.amount" class="text-center text-gray-800">
             {{ resumen }}
-          </p>
+          </p> -->
         </div>
       </form>
     </div>
