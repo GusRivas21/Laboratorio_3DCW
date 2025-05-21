@@ -1,13 +1,14 @@
 <script setup>
-import {ref} from 'vue';
 import HeaderComponent from './components/HeaderComponent.vue';
 import FooterComponent from './components/FooterComponent.vue';
 </script>
 
 <template>
-    <HeaderComponent />
-    <RouterView />
-    <FooterComponent />
+    <div>
+        <HeaderComponent />
+        <RouterView />
+        <FooterComponent />
+    </div>
 </template>
 
 <style scoped>
