@@ -1,4 +1,8 @@
 <template>
+    <!--
+    Este es el componente de inicio de sesión
+    que permite a los usuarios ingresar su correo y contraseña.
+    -->
     <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
         <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
         <h2 class="text-xl font-bold mb-4 text-center">Iniciar Sesión</h2>
@@ -36,7 +40,7 @@ const login = () => {
     }
 
     const user = email.value.includes('admin') ? admin : cliente
-
+    // Simulación de autenticación
     localStorage.setItem('user', JSON.stringify(user))
     router.push('/inicio').then(() => {
         window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
