@@ -22,28 +22,60 @@ import { useRouter } from 'vue-router'
 const router = useRouter()
 const email = ref('')
 const password = ref('')
+const error = ref('')
 
-const login = () => {
-    // Simulación de usuarios
-    const admin = {
-        token: '123',
-        role: 'admin',
-        name: 'Administrador Juan',
-        email: 'admin@admin.com'
+const login = async () => {
+    try {
+        const res = await fetch('http://localhost:5001/api/users/login', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        credentials: 'include',
+        body: JSON.stringify({ email: email.value, password: password.value })
+        })
+
+        console.log("Respuesta del servidor:", res)
+
+        if (!res.ok) {
+        const data = await res.json()
+        console.log("Error del backend:", data)
+        throw new Error(data.mensaje || data.error)
+        }
+
+        const user = await res.json()
+        console.log("Usuario logueado:", user)
+        localStorage.setItem('user', JSON.stringify(user))
+        router.push('/adminDashboard').then(() => {
+            window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
+        })
+    } catch (err) {
+        console.error("Error en login:", err)
+        error.value = err.message
     }
-
-    const cliente = {
-        token: '456',
-        role: 'cliente',
-        name: 'Carlos Cliente',
-        email: 'cliente@cliente.com'
-    }
-
-    const user = email.value.includes('admin') ? admin : cliente
-    // Simulación de autenticación
-    localStorage.setItem('user', JSON.stringify(user))
-    router.push('/inicio').then(() => {
-        window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
-    })
 }
+
+
+// Forma de hacerlo s
+// const login = () => {
+//     // Simulación de usuarios
+//     const admin = {
+//         token: '123',
+//         role: 'admin',
+//         name: 'Administrador Juan',
+//         email: 'admin@admin.com'
+//     }
+
+//     const cliente = {
+//         token: '456',
+//         role: 'cliente',
+//         name: 'Carlos Cliente',
+//         email: 'cliente@cliente.com'
+//     }
+
+//     const user = email.value.includes('admin') ? admin : cliente
+//     // Simulación de autenticación
+//     localStorage.setItem('user', JSON.stringify(user))
+//     router.push('/inicio').then(() => {
+//         window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
+//     })
+// }
 </script>

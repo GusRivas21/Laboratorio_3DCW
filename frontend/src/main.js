@@ -2,7 +2,7 @@ import './assets/main.css'
 
 import { createApp } from 'vue'
 import App from './App.vue'
-import router from './router'
+import router from './routes'
 
 //Importando Toastification y sus estilos
 import Toast, { POSITION } from "vue-toastification";
