@@ -23,15 +23,15 @@ import { ref, onMounted } from 'vue'
 
         <div class="space-y-3">
             <div>
-            <span class="font-semibold">Nombre:</span>
+            <span class="font-semibold">Nombre: </span>
             <span>{{ user.name }}</span>
             </div>
             <div>
-            <span class="font-semibold">Correo:</span>
+            <span class="font-semibold">Correo: </span>
             <span>{{ user.email || 'no-asignado@mail.com' }}</span>
             </div>
             <div>
-            <span class="font-semibold">Rol:</span>
+            <span class="font-semibold">Rol: </span>
             <span class="capitalize">{{ user.role }}</span>
             </div>
         </div>
