@@ -1,13 +1,11 @@
 import { createRouter, createMemoryHistory, createWebHistory } from 'vue-router'
+import HomeView from '../views/HomeView.vue'
 import MainComponent from '../components/MainComponent.vue'
 import FormComponent from '../components/FormComponent.vue'
 import ServicesComponent from '../components/ServicesComponent.vue'
 import AboutUsComponent from '../components/AboutUsComponent.vue'
 import LoginView from '../views/LoginView.vue'
 import ProfileView from '../views/ProfileView.vue'
-import AdminView from '../views/AdminView.vue'
-import AdminDashboard from '../pages/AdminDashboard.vue'
-import CustomerDashboard from '../pages/CustomerDashboard.vue'
 
 const routes = [
     { path: '/', component: MainComponent }, //enlace que se conecta con el routerview de App.vue
@@ -17,9 +15,6 @@ const routes = [
     { path: '/sobre_nosotros', component: AboutUsComponent, name: 'sobre' }, //enlace al componente AboutUsComponent
     { path: '/login', component: LoginView, name: 'login' }, //enlace al componente LoginView
     { path: '/perfil', component: ProfileView, name: 'perfil' }, //enlace al componente ProfileView
-    { path: '/inicioUser', component: MainComponent, name: 'inicioUser' }, //enlace al componente AdminView
-    { path: '/adminDashboard', component: MainComponent, name: 'adminDashboard' }, //enlace al componente AdminDashboard
-    { path : '/customerDashboard', component: MainComponent, name: 'customerDashboard' } //enlace al componente CustomerDashboard
 ]
 
 const router = createRouter({

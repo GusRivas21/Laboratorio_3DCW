@@ -3,38 +3,43 @@ import comidaImage from './img/comida.jpg';
 </script>
 
 <template>
-
   <main class="text-white">
-    <section class="h-screen bg-cover bg-center flex flex-col justify-center items-center text-center px-4"
-    :style="{backgroundImage: `url(${comidaImage})` }">
-      <h1 class="text-5xl md:text-6xl font-extrabold text-yellow-400">GUS GU'S</h1>
-      <h2 class="text-4xl md:text-5xl font-bold mt-2">RESTAURANT</h2>
-      <p class="mt-4 text-lg">¡Que la pasta se haga y el sabor hable por sí mismo!</p>
+    <!-- Hero principal -->
+    <section
+      class="h-[80vh] md:h-screen bg-cover bg-center flex flex-col justify-center items-center text-center px-4 relative"
+      :style="{backgroundImage: `linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.7)), url(${comidaImage})`}"
+    >
+      <div class="backdrop-blur-sm bg-black/30 rounded-xl p-8">
+        <h1 class="text-5xl md:text-7xl font-extrabold text-red-400 drop-shadow-lg">GUS GU'S</h1>
+        <h2 class="text-3xl md:text-5xl font-bold mt-2 tracking-widest">RESTAURANT</h2>
+        <p class="mt-6 text-lg md:text-2xl text-gray-100 font-medium">¡Que la pasta se haga y el sabor hable por sí mismo!</p>
+        <a href="#menu" class="inline-block mt-8 px-8 py-3 bg-red-400 text-black font-bold rounded-full shadow-lg hover:bg-red-300 transition">Ver Menú</a>
+      </div>
     </section>
 
-    <section class="bg-gray-700 py-16 px-4">
-      <h2 class="text-center text-4xl font-bold mb-12">Nuestro Menú</h2>
-      <div class="max-w-7xl mx-auto grid md:grid-cols-3 gap-8">
-        <div class="bg-gray-100 text-gray-800 rounded-xl shadow-md p-4">
-          <img src="./img/Primi piatti.jpg" alt="Primi piatti" class="rounded-md mb-4 w-full h-48 object-cover" />
-          <h3 class="font-bold text-xl mb-1">Primi piatti</h3>
-          <p class="mb-1">Espaguetis en una cremosa salsa de huevo, queso pecorino y panceta crujiente.</p>
-          <p class="italic">"El secreto de Roma en un plato."</p>
+    <!-- Menú destacado -->
+    <section id="menu" class="bg-gray-900 py-20 px-4">
+      <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-red-400 tracking-widest">Nuestro Menú</h2>
+      <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
+        <div class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
+          <img src="./img/Primi piatti.jpg" alt="Primi piatti" class="rounded-lg mb-5 w-full h-48 object-cover shadow" />
+          <h3 class="font-bold text-2xl mb-2 text-yellow-700">Primi piatti</h3>
+          <p class="mb-2 text-center">Espaguetis en una cremosa salsa de huevo, queso pecorino y panceta crujiente.</p>
+          <p class="italic text-gray-600 text-center">"El secreto de Roma en un plato."</p>
         </div>
-        <div class="bg-gray-100 text-gray-800 rounded-xl shadow-md p-4">
-          <img src="./img/panajo.jpg" alt="Antipasti" class="rounded-md mb-4 w-full h-48 object-cover" />
-          <h3 class="font-bold text-xl mb-1">Antipasti</h3>
-          <p class="mb-1">Pan crujiente con tomate fresco, albahaca y un toque de ajo.</p>
-          <p class="italic">"Un bocado y estarás en la Toscana."</p>
+        <div class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
+          <img src="./img/panajo.jpg" alt="Antipasti" class="rounded-lg mb-5 w-full h-48 object-cover shadow" />
+          <h3 class="font-bold text-2xl mb-2 text-yellow-700">Antipasti</h3>
+          <p class="mb-2 text-center">Pan crujiente con tomate fresco, albahaca y un toque de ajo.</p>
+          <p class="italic text-gray-600 text-center">"Un bocado y estarás en la Toscana."</p>
         </div>
-        <div class="bg-gray-100 text-gray-800 rounded-xl shadow-md p-4">
-          <img src="./img/Carpaccio.jpg" alt="Carpaccio di Manzo" class="rounded-md mb-4 w-full h-48 object-cover" />
-          <h3 class="font-bold text-xl mb-1">Carpaccio di Manzo</h3>
-          <p class="mb-1">Finísimas láminas de res con rúcula, parmesano y aderezo de limón.</p>
-          <p class="italic">"Tan suave que se derrite en tu boca."</p>
+        <div class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
+          <img src="./img/Carpaccio.jpg" alt="Carpaccio di Manzo" class="rounded-lg mb-5 w-full h-48 object-cover shadow" />
+          <h3 class="font-bold text-2xl mb-2 text-yellow-700">Carpaccio di Manzo</h3>
+          <p class="mb-2 text-center">Finísimas láminas de res con rúcula, parmesano y aderezo de limón.</p>
+          <p class="italic text-gray-600 text-center">"Tan suave que se derrite en tu boca."</p>
         </div>
       </div>
     </section>
   </main>
-
 </template>

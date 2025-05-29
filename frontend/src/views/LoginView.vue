@@ -1,20 +1,3 @@
-<template>
-    <!--
-    Este es el componente de inicio de sesión
-    que permite a los usuarios ingresar su correo y contraseña.
-    -->
-    <div class="flex flex-col items-center justify-center min-h-screen bg-gray-100">
-        <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
-        <h2 class="text-xl font-bold mb-4 text-center">Iniciar Sesión</h2>
-        <form @submit.prevent="login">
-            <input v-model="email" type="email" placeholder="Correo" class="w-full mb-4 p-2 border rounded" required />
-            <input v-model="password" type="password" placeholder="Contraseña" class="w-full mb-4 p-2 border rounded" required />
-            <button type="submit" class="w-full bg-black text-white py-2 rounded hover:opacity-90">Entrar</button>
-        </form>
-        </div>
-    </div>
-</template>
-
 <script setup>
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
@@ -27,28 +10,23 @@ const error = ref('')
 const login = async () => {
     try {
         const res = await fetch('http://localhost:5001/api/users/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        credentials: 'include',
-        body: JSON.stringify({ email: email.value, password: password.value })
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ email: email.value, password: password.value })
         })
 
-        console.log("Respuesta del servidor:", res)
-
         if (!res.ok) {
-        const data = await res.json()
-        console.log("Error del backend:", data)
-        throw new Error(data.mensaje || data.error)
+            const data = await res.json()
+            throw new Error(data.mensaje || data.error)
         }
 
         const user = await res.json()
-        console.log("Usuario logueado:", user)
         localStorage.setItem('user', JSON.stringify(user))
         router.push('/adminDashboard').then(() => {
-            window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
+            window.location.reload()
         })
     } catch (err) {
-        console.error("Error en login:", err)
         error.value = err.message
     }
 }
@@ -79,3 +57,34 @@ const login = async () => {
 //     })
 // }
 </script>
+
+<template>
+    <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 px-2">
+        <div class="bg-white/90 p-8 rounded-2xl shadow-2xl w-full max-w-sm">
+        <h2 class="text-2xl  text-center text-black mb-6 drop-shadow">Iniciar Sesión</h2>
+        <form @submit.prevent="login" class="flex flex-col gap-4">
+            <input
+            v-model="email"
+            type="email"
+            placeholder="Correo"
+            class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
+            required
+            />
+            <input
+            v-model="password"
+            type="password"
+            placeholder="Contraseña"
+            class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
+            required
+            />
+            <button
+            type="submit"
+            class="w-full bg-red-700 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition"
+            >
+            Entrar
+            </button>
+            <p v-if="error" class="text-center text-red-600 font-medium mt-2">{{ error }}</p>
+        </form>
+        </div>
+    </div>
+</template>

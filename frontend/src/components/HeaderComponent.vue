@@ -1,88 +1,111 @@
 <script setup>
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 import { UserIcon } from '@heroicons/vue/24/solid'
+import router from '../routes/index'
 
 const user = JSON.parse(localStorage.getItem('user') || 'null')
 const menuVisible = ref(false)
 const mobileMenu = ref(false)
 
+const route = useRoute()
+
 const toggleMenu = () => {
     menuVisible.value = !menuVisible.value
 }
-
 const toggleMobileMenu = () => {
     mobileMenu.value = !mobileMenu.value
 }
-
 const logout = () => {
     localStorage.removeItem('user')
-    window.location.href = '/login'
+    router.push('/login')
 }
 </script>
 
 <template>
-    <nav class="relative flex items-center justify-between bg-black px-5 py-4 text-white w-full box-border">
+    <nav class="relative bg-gradient-to-r from-black via-red-900 to-black text-white px-6 py-5 shadow-lg">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
         <!-- Logo -->
-        <div class="flex items-center gap-2.5">
-            <a v-if="!mobileMenu" href="/inicio" class="bg-black hidden md:block">
-                <img src="./img/logoRes.jpeg" alt="Logo de la aplicación" class="w-20 h-auto" />
-            </a>
+        <a class="flex items-center gap-2">
+            <img src="./img/logoRes.jpeg" alt="Logo de la aplicación" class="w-14 h-14 rounded-full shadow-md" />
+            <span class="font-bold text-xl tracking-widest hidden sm:inline">GUS GU'S</span>
+        </a>
 
-        <!-- Botón hamburguesa (solo en móviles) -->
-            <button class="md:hidden flex flex-col justify-center items-center" @click="toggleMobileMenu">
-                <span class="block w-6 h-0.5 bg-white mb-1"></span>
-                <span class="block w-6 h-0.5 bg-white mb-1"></span>
-                <span class="block w-6 h-0.5 bg-white"></span>
-            </button>
-        </div>
-
-        <!-- Enlaces -->
-        <ul class="hidden md:flex gap-5 list-none p-0 m-0">
-            <li><router-link to="/inicio" class="text-white font-bold hover:underline">Inicio</router-link></li>
-            <li><router-link :to="{ name: 'servicios' }" class="text-white font-bold hover:underline">Servicios</router-link></li>
-            <li><router-link :to="{ name: 'form'}" class="text-white font-bold hover:underline">Formulario</router-link></li>
-            <li><router-link :to="{ name: 'sobre' }" class="text-white font-bold hover:underline">Sobre Nosotros</router-link></li>
+        <!-- Menú escritorio -->
+        <ul class="hidden md:flex gap-8 font-semibold text-lg">
+            <li v-if="route.name !== 'inicio'">
+                <router-link to="/inicio" class="hover:text-red-100 transition">Inicio</router-link>
+            </li>
+            <li v-if="route.name !== 'servicios'">
+                <router-link :to="{ name: 'servicios' }" class="hover:text-red-100 transition">Servicios</router-link>
+            </li>
+            <li v-if="route.name !== 'form'">
+                <router-link :to="{ name: 'form'}" class="hover:text-red-100 transition">Formulario</router-link>
+            </li>
+            <li v-if="route.name !== 'sobre'">
+                <router-link :to="{ name: 'sobre' }" class="hover:text-red-100 transition">Sobre Nosotros</router-link>
+            </li>
         </ul>
 
-        <!-- Menú móvil -->
-        <Transition enter-active-class="transition-all duration-300" enter-from-class="opacity-0 -translate-y-4" enter-to-class="opacity-100 translate-y-0" leave-active-class="transition-all duration-200" leave-from-class="opacity-100 translate-y-0" leave-to-class="opacity-0 -translate-y-4">
-            <ul
-                v-if="mobileMenu"
-                class="absolute top-full left-0 w-full bg-black flex flex-col gap-2 py-4 md:hidden z-50">
-                <!-- ...enlaces... -->
-                    <li><router-link to="/inicio" class="text-white font-bold hover:underline px-5 py-2 block">Inicio</router-link></li>
-                    <li><router-link :to="{ name: 'servicios' }" class="text-white font-bold hover:underline px-5 py-2 block">Servicios</router-link></li>
-                    <li><router-link :to="{ name: 'form'}" class="text-white font-bold hover:underline px-5 py-2 block">Formulario</router-link></li>
-                    <li><router-link :to="{ name: 'sobre' }" class="text-white font-bold hover:underline px-5 py-2 block">Sobre Nosotros</router-link></li>
-            </ul>
-        </Transition>
-
-        <!-- Ícono de usuario / menú -->
-        <div class="relative ml-4">
-        <!-- Si NO está logueado -->
-        <router-link v-if="!user" :to="{ name: 'login' }" class="hover:opacity-80">
-            <UserIcon class="w-6 h-6 text-white" />
-        </router-link>
-
-        <!-- Si está logueado -->
-        <div v-else class="relative">
+        <!-- Usuario / Login -->
+        <div class="flex items-center gap-2">
+            <router-link v-if="!user" :to="{ name: 'login' }" class="hover:opacity-80">
+            <UserIcon class="w-7 h-7 text-white" />
+            </router-link>
+            <div v-else class="relative">
             <button @click="toggleMenu" class="hover:opacity-80 flex items-center gap-2">
-            <UserIcon class="w-6 h-6 text-white" />
-            <span class="text-sm">{{ user.role }}</span>
+                <UserIcon class="w-7 h-7 text-white" />
+                <span class="text-sm hidden sm:inline">{{ user.role }}</span>
             </button>
-
-            <!-- Menú desplegable -->
+            <!-- Menú desplegable usuario -->
             <div v-if="menuVisible" class="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg w-40 z-50">
-            <ul class="py-2">
+                <ul class="py-2">
                 <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                <router-link to="/perfil">Mi Perfil</router-link>
+                    <router-link to="/perfil">Mi Perfil</router-link>
                 </li>
                 <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" @click="logout">
-                Cerrar sesión
+                    Cerrar sesión
                 </li>
-            </ul>
+                </ul>
+            </div>
+            </div>
+            <!-- Botón hamburguesa solo en móvil -->
+            <button class="md:hidden ml-2 flex flex-col justify-center items-center" @click="toggleMobileMenu">
+            <span class="block w-7 h-0.5 bg-white mb-1 rounded"></span>
+            <span class="block w-7 h-0.5 bg-white mb-1 rounded"></span>
+            <span class="block w-7 h-0.5 bg-white rounded"></span>
+            </button>
+        </div>
+        </div>
+
+        <!-- Menú móvil full screen -->
+        <Transition
+        enter-active-class="transition-all duration-300"
+        enter-from-class="opacity-0 translate-y-8"
+        enter-to-class="opacity-100 translate-y-0"
+        leave-active-class="transition-all duration-200"
+        leave-from-class="opacity-100 translate-y-0"
+        leave-to-class="opacity-0 translate-y-8"
+        >
+        <div
+            v-if="mobileMenu"
+            class="fixed inset-0 bg-black/95 flex flex-col items-center justify-center gap-8 z-50 md:hidden"
+            @click.self="toggleMobileMenu"
+        >
+            <button class="absolute top-6 right-6 text-white text-3xl" @click="toggleMobileMenu">&times;</button>
+            <router-link to="/inicio" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Inicio</router-link>
+            <router-link :to="{ name: 'servicios' }" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Servicios</router-link>
+            <router-link :to="{ name: 'form'}" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Formulario</router-link>
+            <router-link :to="{ name: 'sobre' }" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Sobre Nosotros</router-link>
+            <div class="mt-8">
+            <router-link v-if="!user" :to="{ name: 'login' }" class="text-lg hover:text-red-100" @click="toggleMobileMenu">
+                Iniciar sesión
+            </router-link>
+            <button v-else class="text-lg hover:text-red-100" @click="logout">
+                Cerrar sesión
+            </button>
             </div>
         </div>
-        </div>
+        </Transition>
     </nav>
 </template>
