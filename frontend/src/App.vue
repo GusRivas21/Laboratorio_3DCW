@@ -1,7 +1,12 @@
 <script setup>
-import HomeView from './views/HomeView.vue'
+import HeaderComponent from './components/HeaderComponent.vue';
+import FooterComponent from './components/FooterComponent.vue';
 </script>
 
 <template>
-    <HomeView />
+    <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200">
+        <HeaderComponent />
+        <RouterView />
+        <FooterComponent />
+    </div>
 </template>

@@ -1,5 +1,4 @@
 import { createRouter, createMemoryHistory, createWebHistory } from 'vue-router'
-import HomeView from '../views/HomeView.vue'
 import MainComponent from '../components/MainComponent.vue'
 import FormComponent from '../components/FormComponent.vue'
 import ServicesComponent from '../components/ServicesComponent.vue'

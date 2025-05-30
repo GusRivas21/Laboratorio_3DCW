@@ -23,8 +23,8 @@ const login = async () => {
 
         const user = await res.json()
         localStorage.setItem('user', JSON.stringify(user))
-        router.push('/adminDashboard').then(() => {
-            window.location.reload()
+        router.push('/inicio').then(() => {
+            window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
         })
     } catch (err) {
         error.value = err.message

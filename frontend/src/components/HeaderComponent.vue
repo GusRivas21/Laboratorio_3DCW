@@ -1,14 +1,37 @@
 <script setup>
-import { ref } from 'vue'
+import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { UserIcon } from '@heroicons/vue/24/solid'
 import router from '../routes/index'
 
-const user = JSON.parse(localStorage.getItem('user') || 'null')
+// Hacer user reactivo y sincronizado con localStorage
+const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 const menuVisible = ref(false)
 const mobileMenu = ref(false)
 
 const route = useRoute()
+
+const syncUser = () => {
+    user.value = JSON.parse(localStorage.getItem('user') || 'null')
+}
+
+// Actualiza user cuando cambie localStorage (en esta pestaña)
+watchEffect(() => {
+    syncUser()
+})
+
+// Escucha cambios de localStorage en otras pestañas
+const handleStorage = (e) => {
+    if (e.key === 'user') {
+        syncUser()
+    }
+}
+onMounted(() => {
+    window.addEventListener('storage', handleStorage)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('storage', handleStorage)
+})
 
 const toggleMenu = () => {
     menuVisible.value = !menuVisible.value
@@ -18,6 +41,9 @@ const toggleMobileMenu = () => {
 }
 const logout = () => {
     localStorage.removeItem('user')
+    menuVisible.value = false
+    mobileMenu.value = false
+    syncUser()
     router.push('/login')
 }
 </script>
@@ -61,7 +87,7 @@ const logout = () => {
             <div v-if="menuVisible" class="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg w-40 z-50">
                 <ul class="py-2">
                 <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                    <router-link to="/perfil">Mi Perfil</router-link>
+                    <router-link :to="{ name: 'perfil' }">Mi Perfil</router-link>
                 </li>
                 <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" @click="logout">
                     Cerrar sesión
