@@ -13,7 +13,6 @@ import comidaImage from './img/comida.jpg';
         <h1 class="text-5xl md:text-7xl font-extrabold text-red-400 drop-shadow-lg">GUS GU'S</h1>
         <h2 class="text-3xl md:text-5xl font-bold mt-2 tracking-widest">RESTAURANT</h2>
         <p class="mt-6 text-lg md:text-2xl text-gray-100 font-medium">¡Que la pasta se haga y el sabor hable por sí mismo!</p>
-        <a href="#menu" class="inline-block mt-8 px-8 py-3 bg-red-400 text-black font-bold rounded-full shadow-lg hover:bg-red-300 transition">Ver Menú</a>
       </div>
     </section>
 

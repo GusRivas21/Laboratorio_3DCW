@@ -23,9 +23,14 @@ const login = async () => {
 
         const user = await res.json()
         localStorage.setItem('user', JSON.stringify(user))
-        router.push('/inicio').then(() => {
-            window.location.reload() // Fuerza la recarga para que el perfil lea el nuevo usuario
-        })
+        // Redirección según el rol y recarga total para actualizar la barra
+        if (user.role === 'admin') {
+            window.location.href = '/admin'
+        } else if (user.role === 'cliente') {
+            window.location.href = '/cliente'
+        } else {
+            window.location.href = '/inicio'
+        }
     } catch (err) {
         error.value = err.message
     }
@@ -85,6 +90,9 @@ const login = async () => {
             </button>
             <p v-if="error" class="text-center text-red-600 font-medium mt-2">{{ error }}</p>
         </form>
+            <div class="mt-4 text-center">
+                <router-link to="/register" class="text-red-700 hover:underline">¿No tienes cuenta? Regístrate</router-link>
+            </div>
         </div>
     </div>
 </template>
