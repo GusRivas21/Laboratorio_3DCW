@@ -18,7 +18,7 @@ import comidaImage from './img/comida.jpg';
 
     <!-- Menú destacado -->
     <section id="menu" class="bg-gray-900 py-20 px-4">
-      <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-red-400 tracking-widest">Nuestro Menú</h2>
+      <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-red-400 tracking-widest">Nuestro Menu</h2>
       <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
         <div class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
           <img src="./img/Primi piatti.jpg" alt="Primi piatti" class="rounded-lg mb-5 w-full h-48 object-cover shadow" />

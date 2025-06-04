@@ -26,8 +26,6 @@ const login = async () => {
         // Redirección según el rol y recarga total para actualizar la barra
         if (user.role === 'admin') {
             window.location.href = '/admin'
-        } else if (user.role === 'cliente') {
-            window.location.href = '/cliente'
         } else {
             window.location.href = '/inicio'
         }

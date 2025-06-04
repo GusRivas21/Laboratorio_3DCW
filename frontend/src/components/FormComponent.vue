@@ -17,15 +17,32 @@ const comidas = ref([
 
 const enviado = ref(false)
 
-const pedidoHecho = () =>{
-    console.log(pedido);
-    enviado.value = true
-    toast.success('¡Pedido Guardado con Exito!', { timeout: 3000 })
-    toast.info(resumen.value, { timeout: 5000 })
-    pedido.name = ''
-    pedido.food = ''
-    pedido.amount = ''
-    pedido.address = ''
+const pedidoHecho = async () => {
+    try {
+        // Construir el objeto para el backend
+        const nuevoPedido = {
+            tipo: 'Pedido',
+            nombre: pedido.name,
+            detalle: `${pedido.amount} ${pedido.food}`,
+            fecha: new Date().toISOString().slice(0, 10),
+            estado: 'Pendiente',
+        }
+        const res = await fetch('http://localhost:5001/api/orders', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(nuevoPedido)
+        })
+        if (!res.ok) throw new Error('Error al guardar el pedido')
+        enviado.value = true
+        toast.success('¡Pedido Guardado con Éxito!', { timeout: 3000 })
+        toast.info(resumen.value, { timeout: 5000 })
+        pedido.name = ''
+        pedido.food = ''
+        pedido.amount = ''
+        pedido.address = ''
+    } catch (err) {
+        toast.error('Error al guardar el pedido')
+    }
 }
 
 const resumen = computed(() => {

@@ -11,16 +11,6 @@ import wifi from '@/components/img/wifi.png'
 //Se crea un array con la lista de objetos que representan los servicios ofrecidos
 const services = [
   {
-    icon: pizza,
-    title: 'Atención a la Mesa',
-    description: 'Disfruta de nuestra comida sin necesidad de levantarte de tu mesa.'
-  },
-  {
-    icon: delivery,
-    title: 'Delivery',
-    description: '¿No tienes tiempo para visitarnos? Te lo llevamos.'
-  },
-  {
     icon: reservar,
     title: 'Reservaciones',
     description: 'Reserva una mesa para tu familia o pareja y disfruta.'
@@ -35,11 +25,6 @@ const services = [
     title: 'Catering',
     description: 'Menús personalizados para eventos o reuniones.'
   },
-  {
-    icon: wifi,
-    title: 'Wi-Fi Gratis',
-    description: 'Wi-Fi gratuito para nuestros queridos clientes.'
-  }
 ]
 
 //Una ropiedad computada que devuelve la cantidad total de servicios disponibles
@@ -49,22 +34,12 @@ const totalServices = computed(() => services.length)
 
 <template>
   <section class="relative bg-cover bg-center py-16 px-4" :style="{ backgroundImage: 'url(https://i.pinimg.com/736x/59/19/34/591934ea0438900629d4f72f3eb1ae7d.jpg)' }">
-    <!--Aqui se muestra el total de servicios usando la propiedad computada-->
-    <h2 class="text-center text-white text-xl font-semibold mb-8">
-      Total de servicios ofrecidos: {{ totalServices }}
-    </h2>
-
-    <!--Contenedor en forma de grilla con 3 columnas en pantallas medianas -->
-    <div class="relative z-10 max-w-7xl mx-auto grid md:grid-cols-3 gap-12 text-center text-gray-900">
-      <!--Iteración de cada servicio con v-for-->
-      <div v-for="(service, index) in services" :key="index" class="bg-white rounded-full shadow-lg p-6 w-64 h-64 flex flex-col justify-center items-center mx-auto transition-transform hover:scale-105">
-        <!--Y se renderiza los valores de las propiedades en el array en el script services-->
-        <!--Imagen del ícono del servicio-->
-        <img :src="service.icon" :alt="service.title" class="w-16 h-16 mb-4" />
-        <!--Título del servicio-->
-        <h3 class="font-bold text-lg mb-1">{{ service.title }}</h3>
-        <!--Descripción del servicio-->
-        <p class="text-sm text-gray-700">{{ service.description }}</p>
+    <h2 class="text-center text-white text-3xl font-bold mb-12">Nuestros Servicios</h2>
+    <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
+      <div v-for="(service, index) in services" :key="index" class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
+        <img :src="service.icon" :alt="service.title" class="rounded-lg mb-5 w-full h-40 object-cover shadow" />
+        <h3 class="font-bold text-2xl mb-2 text-red-700">{{ service.title }}</h3>
+        <p class="mb-2 text-center">{{ service.description }}</p>
       </div>
     </div>
   </section>

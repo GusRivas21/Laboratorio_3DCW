@@ -3,6 +3,7 @@ import mongoose from 'mongoose'
 import cors from 'cors'
 import dotenv from 'dotenv'
 import userRoutes from './routes/index.js'
+import orderRoutes from './routes/order.js'
 
 dotenv.config()
 
@@ -14,16 +15,16 @@ mongoose.connect(process.env.MONGO_URI, {
 
 const app = express()
 
-// ✅ CORS BIEN CONFIGURADO
+// CORS BIEN CONFIGURADO
 app.use(cors({
     origin: 'http://localhost:5173',
     credentials: true,
 }))
 
-// ✅ Permitir JSON
+// Permitir JSON
 app.use(express.json())
 
-// ✅ Rutas
+// Rutas
 app.use('/api/users', userRoutes)
 
 // Ruta base
@@ -31,7 +32,10 @@ app.get('/', (req, res) => {
     res.send('¡Backend funcionando!')
 })
 
-// ✅ Puerto
+// Rutas de pedidos y reservaciones
+app.use('/api/orders', orderRoutes)
+
+// Puerto
 const PORT = process.env.PORT || 5001
 app.listen(PORT, () => {
     console.log(`🚀 Servidor corriendo en http://localhost:${PORT}`)

@@ -6,7 +6,6 @@ const router = useRouter()
 const name = ref('')
 const email = ref('')
 const password = ref('')
-const role = ref('cliente') // Por defecto, cliente
 const error = ref('')
 const success = ref('')
 
@@ -17,7 +16,7 @@ const register = async () => {
         const res = await fetch('http://localhost:5001/api/users/register', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ name: name.value, email: email.value, password: password.value, role: role.value })
+            body: JSON.stringify({ name: name.value, email: email.value, password: password.value }) // No se envía rol
         })
         if (!res.ok) {
             const data = await res.json()
@@ -40,10 +39,6 @@ const register = async () => {
             <input v-model="name" type="text" placeholder="Nombre" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition" required />
             <input v-model="email" type="email" placeholder="Correo" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition" required />
             <input v-model="password" type="password" placeholder="Contraseña" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition" required />
-            <select v-model="role" class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition">
-            <option value="cliente">Cliente</option>
-            <option value="admin">Administrador</option>
-            </select>
             <button type="submit" class="w-full bg-red-700 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition">Registrarse</button>
             <p v-if="error" class="text-center text-red-600 font-medium mt-2">{{ error }}</p>
             <p v-if="success" class="text-center text-green-600 font-medium mt-2">{{ success }}</p>

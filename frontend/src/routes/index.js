@@ -6,7 +6,6 @@ import AboutUsComponent from '../components/AboutUsComponent.vue'
 import LoginView from '../views/LoginView.vue'
 import ProfileView from '../views/ProfileView.vue'
 import AdminDashboard from '../pages/AdminDashboard.vue'
-import CustomerDashboard from '../pages/CustomerDashboard.vue'
 import RegisterView from '../views/RegisterView.vue'
 
 const routes = [
@@ -18,7 +17,6 @@ const routes = [
     { path: '/login', component: LoginView, name: 'login' }, //enlace al componente LoginView
     { path: '/perfil', component: ProfileView, name: 'perfil' }, //enlace al componente ProfileView
     { path: '/admin', component: AdminDashboard, name: 'admin' },
-    { path: '/cliente', component: CustomerDashboard, name: 'cliente' },
     { path: '/register', component: RegisterView, name: 'register' },
 ]
 
@@ -31,9 +29,6 @@ const router = createRouter({
 router.beforeEach((to, from, next) => {
     const user = JSON.parse(localStorage.getItem('user') || 'null')
     if (to.name === 'admin' && (!user || user.role !== 'admin')) {
-        return next({ name: 'login' })
-    }
-    if (to.name === 'cliente' && (!user || user.role !== 'cliente')) {
         return next({ name: 'login' })
     }
     next()

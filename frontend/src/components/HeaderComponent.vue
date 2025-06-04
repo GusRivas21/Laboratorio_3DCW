@@ -84,10 +84,6 @@ const logout = () => {
             <li v-if="user && user.role === 'admin' && route.name !== 'admin'">
                 <router-link :to="{ name: 'admin' }" class="hover:text-red-100 transition">Panel Admin</router-link>
             </li>
-            <!-- Opciones para cliente -->
-            <li v-if="user && user.role === 'cliente' && route.name !== 'cliente'">
-                <router-link :to="{ name: 'cliente' }" class="hover:text-red-100 transition">Panel Cliente</router-link>
-            </li>
         </ul>
 
         <!-- Usuario / Login -->
@@ -104,22 +100,17 @@ const logout = () => {
             <div v-if="menuVisible" class="absolute right-0 mt-2 bg-white text-black rounded-md shadow-lg w-48 z-50">
                 <ul class="py-2">
                 <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                    <router-link :to="{ name: 'perfil' }">Mi Perfil</router-link>
+                    <router-link :to="{ name: 'perfil' }" class="block w-full h-full">Mi Perfil</router-link>
                 </li>
-                <!-- Funciones específicas para admin -->
+
+                <!-- En dudar si dejar este o dejar el otro-->
+                <!-- Funciones específicas para admin
                 <li v-if="user && user.role === 'admin'" class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
                     <router-link :to="{ name: 'admin' }">Panel Admin</router-link>
                 </li>
                 <li v-if="user && user.role === 'admin'" class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
                     <router-link :to="{ name: 'servicios' }">Gestionar Menú</router-link>
-                </li>
-                <!-- Funciones específicas para cliente -->
-                <li v-if="user && user.role === 'cliente'" class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                    <router-link :to="{ name: 'cliente' }">Panel Cliente</router-link>
-                </li>
-                <li v-if="user && user.role === 'cliente'" class="px-4 py-2 hover:bg-gray-200 cursor-pointer">
-                    <router-link :to="{ name: 'form' }">Reservar</router-link>
-                </li>
+                </li> -->
                 <li class="px-4 py-2 hover:bg-gray-200 cursor-pointer" @click="logout">
                     Cerrar sesión
                 </li>
@@ -155,7 +146,6 @@ const logout = () => {
             <router-link :to="{ name: 'form'}" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Formulario</router-link>
             <router-link :to="{ name: 'sobre' }" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Sobre Nosotros</router-link>
             <router-link v-if="user && user.role === 'admin' && route.name !== 'admin'" :to="{ name: 'admin' }" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Panel Admin</router-link>
-    <router-link v-if="user && user.role === 'cliente' && route.name !== 'cliente'" :to="{ name: 'cliente' }" class="text-2xl font-bold hover:text-red-100" @click="toggleMobileMenu">Panel Cliente</router-link>
             <div class="mt-8">
             <router-link v-if="!user" :to="{ name: 'login' }" class="text-lg hover:text-red-100" @click="toggleMobileMenu">
                 Iniciar sesión
