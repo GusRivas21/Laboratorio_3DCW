@@ -55,10 +55,36 @@ const logout = () => {
     syncUserAndNotify()
     window.location.href = '/login' // Forzar recarga total
 }
+
+// --- Lógica para ocultar header al hacer scroll hacia abajo y mostrarlo al subir ---
+const showHeader = ref(true)
+let lastScrollY = window.scrollY
+
+const handleScrollHeader = () => {
+  const currentScrollY = window.scrollY
+  if (currentScrollY > lastScrollY && currentScrollY > 80) {
+    // Bajando y no está arriba del todo
+    showHeader.value = false
+  } else {
+    // Subiendo
+    showHeader.value = true
+  }
+  lastScrollY = currentScrollY
+}
+
+onMounted(() => {
+  window.addEventListener('scroll', handleScrollHeader)
+})
+onBeforeUnmount(() => {
+  window.removeEventListener('scroll', handleScrollHeader)
+})
 </script>
 
 <template>
-    <nav class="relative bg-gradient-to-r from-black via-red-900 to-black text-white px-6 py-5 shadow-lg">
+    <nav
+        class="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-black via-red-900 to-black text-white px-6 py-5 shadow-lg transition-transform duration-300"
+        :style="{ transform: showHeader ? 'translateY(0)' : 'translateY(-120%)' }"
+    >
         <div class="max-w-7xl mx-auto flex items-center justify-between">
         <!-- Logo -->
         <a class="flex items-center gap-2">

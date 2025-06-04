@@ -27,7 +27,7 @@ onMounted(() => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 flex">
+    <div class="min-h-screen bg-gray-100 flex pt-24">
         <!-- Panel lateral -->
         <aside class="w-64 bg-red-900 text-white flex flex-col py-8 px-4 shadow-lg">
         <h1 class="text-2xl font-bold mb-8 text-center">Panel Admin</h1>

@@ -1,6 +1,6 @@
 <template>
     <section
-        class="relative bg-cover bg-center text-white py-20 px-4 sm:px-6 min-h-screen"
+        class="relative bg-cover bg-center text-white py-20 px-4 sm:px-6 min-h-screen pt-30"
         style="background-image: url('https://i.pinimg.com/736x/e9/ed/a3/e9eda3e2ab85ba3572eaa79919c32022.jpg');"
     >
         <div class="absolute inset-0 bg-black/70"></div>
