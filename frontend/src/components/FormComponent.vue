@@ -27,7 +27,7 @@ const pedidoHecho = async () => {
             fecha: new Date().toISOString().slice(0, 10),
             estado: 'Pendiente',
         }
-        const res = await fetch('http://localhost:5001/api/orders', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(nuevoPedido)

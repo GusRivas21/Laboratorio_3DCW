@@ -11,7 +11,7 @@ const fetchPedidos = async () => {
     loading.value = true
     error.value = ''
     try {
-        const res = await fetch('http://localhost:5001/api/orders')
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`)
         if (!res.ok) throw new Error('Error al cargar los pedidos y reservaciones.')
         pedidos.value = await res.json()
     } catch (err) {

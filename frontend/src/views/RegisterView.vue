@@ -13,7 +13,7 @@ const register = async () => {
     error.value = ''
     success.value = ''
     try {
-        const res = await fetch('http://localhost:5001/api/users/register', {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/register`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ name: name.value, email: email.value, password: password.value }) // No se envía rol
