@@ -13,10 +13,12 @@ export const getAllOrders = async (req, res) => {
 // Crear un nuevo pedido o reserva
 export const createOrder = async (req, res) => {
     try {
+        console.log('Pedido recibido:', req.body)
         const order = new Order(req.body)
         await order.save()
         res.status(201).json(order)
     } catch (err) {
-        res.status(400).json({ error: err.message })
+        console.error('Error al crear pedido:', err.message)
+        res.status(400).json({ error: err.message, body: req.body })
     }
 }
