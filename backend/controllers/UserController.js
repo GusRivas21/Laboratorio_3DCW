@@ -59,3 +59,30 @@ export const getAllUsers = async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 }
+
+// Editar usuario (solo admin)
+export const updateUser = async (req, res) => {
+    try {
+        const { name, email, role } = req.body
+        const user = await User.findByIdAndUpdate(
+            req.params.id,
+            { name, email, role },
+            { new: true, runValidators: true, select: '-password' }
+        )
+        if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
+        res.json(user)
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+}
+
+// Eliminar usuario (solo admin)
+export const deleteUser = async (req, res) => {
+    try {
+        const user = await User.findByIdAndDelete(req.params.id)
+        if (!user) return res.status(404).json({ error: 'Usuario no encontrado' })
+        res.json({ mensaje: 'Usuario eliminado correctamente' })
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+}
