@@ -34,6 +34,7 @@ onMounted(() => {
         <nav class="flex-1 flex flex-col gap-4">
             <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition">Pedidos y Reservas</router-link>
             <router-link to="/servicios" class="py-2 px-4 rounded hover:bg-red-700 transition">Gestionar Menú</router-link>
+            <router-link to="/admin/usuarios" class="py-2 px-4 rounded hover:bg-red-700 transition">Usuarios</router-link>
         </nav>
         </aside>
         <!-- Contenido principal -->

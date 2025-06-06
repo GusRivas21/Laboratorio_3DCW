@@ -27,7 +27,7 @@ onUnmounted(() => {
         backgroundSize: 'cover',
         backgroundPosition: `center ${scrollY * 0.4}px`,
         backgroundRepeat: 'no-repeat',
-        transition: 'background-position 0.2s',
+        transition: 'background-position 1.2s',
       }"
     >
       <div class="backdrop-blur-sm bg-black/30 rounded-xl p-8">

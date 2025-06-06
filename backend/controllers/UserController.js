@@ -49,3 +49,13 @@ export const registerUser = async (req, res) => {
         res.status(500).json({ error: err.message })
     }
 }
+
+// Obtener todos los usuarios (solo para admin)
+export const getAllUsers = async (req, res) => {
+    try {
+        const users = await User.find().select('-password')
+        res.json(users)
+    } catch (err) {
+        res.status(500).json({ error: err.message })
+    }
+}
