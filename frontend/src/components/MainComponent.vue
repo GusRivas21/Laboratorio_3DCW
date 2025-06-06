@@ -52,21 +52,6 @@ import AboutUsComponent from './AboutUsComponent.vue';
         </div>
       </div>
     </section>
-
-    <!-- Separador visual con imagen -->
-    <div
-      class="w-full h-16 md:h-20 flex items-center justify-center overflow-hidden relative my-[-2rem] z-20"
-      style="background: linear-gradient(to right, #1a1a1a 0%, #7f1d1d 50%, #1a1a1a 100%);"
-    >
-      <img
-        :src="comidaImage"
-        alt="Separador comida"
-        class="w-full h-full object-cover object-center shadow-lg opacity-80 border-t-4 border-red-400"
-        draggable="false"
-        style="border-radius:0;"
-      />
-    </div>
-
   </main>
   <!-- Sección Sobre Nosotros -->
   <AboutUsComponent />
