@@ -1,66 +1,70 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
 import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { UserIcon } from '@heroicons/vue/24/solid'
 import router from '../routes/index'
 
-    // Hacer user reactivo y sincronizado con localStorage
-    const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
-    const menuVisible = ref(false)
-    const mobileMenu = ref(false)
+// --- ESTADO DE USUARIO Y MENÚ ---
+// user: datos del usuario logueado
+const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
+const menuVisible = ref(false)
+const mobileMenu = ref(false)
 
-    const route = useRoute()
+const route = useRoute()
 
-    const syncUser = () => {
+// Sincroniza el usuario con localStorage
+const syncUser = () => {
+    user.value = JSON.parse(localStorage.getItem('user') || 'null')
+}
+
+// Actualiza user cuando cambie localStorage (en esta pestaña)
+watchEffect(() => {
+    user.value = JSON.parse(localStorage.getItem('user') || 'null')
+})
+
+// Escucha cambios de localStorage en otras pestañas y en la misma
+const handleStorage = (e) => {
+    if (e.key === 'user') {
         user.value = JSON.parse(localStorage.getItem('user') || 'null')
     }
+}
+onMounted(() => {
+    window.addEventListener('storage', handleStorage)
+    // Escucha cambios manuales en la misma pestaña
+    window.addEventListener('user-updated', syncUser)
+})
+onBeforeUnmount(() => {
+    window.removeEventListener('storage', handleStorage)
+    window.removeEventListener('user-updated', syncUser)
+})
 
-    // Actualiza user cuando cambie localStorage (en esta pestaña)
-    watchEffect(() => {
-        user.value = JSON.parse(localStorage.getItem('user') || 'null')
-    })
+// --- FUNCIONES DE MENÚ Y LOGOUT ---
+const toggleMenu = () => {
+    menuVisible.value = !menuVisible.value
+}
+const toggleMobileMenu = () => {
+    mobileMenu.value = !mobileMenu.value
+}
+// Cuando se hace login/logout, dispara un evento para forzar actualización en todos los componentes
+const syncUserAndNotify = () => {
+    syncUser()
+    window.dispatchEvent(new Event('user-updated'))
+}
 
-    // Escucha cambios de localStorage en otras pestañas y en la misma
-    const handleStorage = (e) => {
-        if (e.key === 'user') {
-            user.value = JSON.parse(localStorage.getItem('user') || 'null')
-        }
-    }
-    onMounted(() => {
-        window.addEventListener('storage', handleStorage)
-        // Escucha cambios manuales en la misma pestaña
-        window.addEventListener('user-updated', syncUser)
-    })
-    onBeforeUnmount(() => {
-        window.removeEventListener('storage', handleStorage)
-        window.removeEventListener('user-updated', syncUser)
-    })
+const logout = () => {
+    localStorage.removeItem('user')
+    menuVisible.value = false
+    mobileMenu.value = false
+    syncUserAndNotify()
+    window.location.href = '/login' // Forzar recarga total
+}
 
-    const toggleMenu = () => {
-        menuVisible.value = !menuVisible.value
-    }
-    const toggleMobileMenu = () => {
-        mobileMenu.value = !mobileMenu.value
-    }
-    // Cuando se hace login/logout, dispara un evento para forzar actualización en todos los componentes
-    const syncUserAndNotify = () => {
-        syncUser()
-        window.dispatchEvent(new Event('user-updated'))
-    }
+// --- Lógica para ocultar header al hacer scroll hacia abajo y mostrarlo al subir ---
+const showHeader = ref(true)
+let lastScrollY = window.scrollY
 
-    const logout = () => {
-        localStorage.removeItem('user')
-        menuVisible.value = false
-        mobileMenu.value = false
-        syncUserAndNotify()
-        window.location.href = '/login' // Forzar recarga total
-    }
-
-    // --- Lógica para ocultar header al hacer scroll hacia abajo y mostrarlo al subir ---
-    const showHeader = ref(true)
-    let lastScrollY = window.scrollY
-
-    const handleScrollHeader = () => {
+const handleScrollHeader = () => {
     const currentScrollY = window.scrollY
     if (currentScrollY > lastScrollY && currentScrollY > 80) {
         // Bajando y no está arriba del todo
@@ -70,14 +74,14 @@ import router from '../routes/index'
         showHeader.value = true
     }
     lastScrollY = currentScrollY
-    }
+}
 
-    onMounted(() => {
+onMounted(() => {
     window.addEventListener('scroll', handleScrollHeader)
-    })
-    onBeforeUnmount(() => {
+})
+onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScrollHeader)
-    })
+})
 </script>
 
 <template>

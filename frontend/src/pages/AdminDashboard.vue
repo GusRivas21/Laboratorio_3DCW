@@ -1,4 +1,5 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
 import { ref, onMounted } from 'vue'
 
 // Simulación de datos de pedidos y reservaciones
@@ -6,7 +7,8 @@ const pedidos = ref([])
 const loading = ref(true)
 const error = ref('')
 
-// Simula la obtención de datos desde el backend
+// --- FUNCIONES PRINCIPALES ---
+// Obtiene los pedidos y reservas del backend
 const fetchPedidos = async () => {
     loading.value = true
     error.value = ''
@@ -21,22 +23,26 @@ const fetchPedidos = async () => {
     }
 }
 
-const pedidoEditando = ref(null)
-const pedidoForm = ref({ tipo: '', nombre: '', detalle: '', fecha: '', estado: '' })
-const pedidoError = ref('')
+// --- ESTADO Y FUNCIONES PARA EDICIÓN DE PEDIDOS ---
+const pedidoEditando = ref(null) // ID del pedido que se está editando
+const pedidoForm = ref({ tipo: '', nombre: '', detalle: '', fecha: '', estado: '' }) // Formulario reactivo para edición
+const pedidoError = ref('') // Mensaje de error en edición
 
+// Inicia la edición de un pedido
 const startEditPedido = (pedido) => {
     pedidoEditando.value = pedido._id
     pedidoForm.value = { tipo: pedido.tipo, nombre: pedido.nombre, detalle: pedido.detalle, fecha: pedido.fecha, estado: pedido.estado }
     pedidoError.value = ''
 }
 
+// Cancela la edición de un pedido
 const cancelarEditPedido = () => {
     pedidoEditando.value = null
     pedidoForm.value = { tipo: '', nombre: '', detalle: '', fecha: '', estado: '' }
     pedidoError.value = ''
 }
 
+// Guarda los cambios de un pedido editado
 const guardarEditPedido = async (id) => {
     pedidoError.value = ''
     try {
@@ -53,6 +59,7 @@ const guardarEditPedido = async (id) => {
     }
 }
 
+// Elimina un pedido del backend
 const eliminarPedido = async (id) => {
     if (!confirm('¿Seguro que deseas eliminar este pedido?')) return
     try {
@@ -64,6 +71,8 @@ const eliminarPedido = async (id) => {
     }
 }
 
+// --- CICLO DE VIDA ---
+// Al montar el componente, carga los pedidos
 onMounted(() => {
     fetchPedidos()
 })

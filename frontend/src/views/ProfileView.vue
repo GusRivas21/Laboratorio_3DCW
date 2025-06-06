@@ -1,7 +1,9 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
 import { ref, onMounted } from 'vue'
 
-const user = ref(JSON.parse(localStorage.getItem('user') || '{}'))
+// Datos del usuario para mostrar en el perfil
+const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 
 function updateUser() {
     user.value = JSON.parse(localStorage.getItem('user') || '{}')
@@ -10,6 +12,13 @@ function updateUser() {
 onMounted(() => {
     window.addEventListener('storage', updateUser)
 })
+
+// --- FUNCIÓN DE LOGOUT ---
+// Elimina el usuario del localStorage y recarga la página
+const logout = () => {
+    localStorage.removeItem('user')
+    window.location.href = '/login'
+}
 </script>
 
 <template>

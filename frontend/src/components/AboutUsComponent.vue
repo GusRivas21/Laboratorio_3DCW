@@ -1,6 +1,8 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
 import { ref } from 'vue';
 
+// Lista de eventos/hitos para la sección Sobre Nosotros
 const events = [
     {
         year: '1955',
@@ -30,6 +32,7 @@ const events = [
 </script>
 
 <template>
+    <!-- Sección Sobre Nosotros: muestra la historia del restaurante en cards -->
     <section class="bg-gradient-to-r dark:from-black dark:via-gray-900 dark:to-black pt-30 py-20 px-4 sm:px-6 flex flex-col items-center">
         <h2 class="text-4xl font-serif text-center mb-16 tracking-widest z-10 relative text-red-700">SOBRE NOSOTROS</h2>
         <div class="w-full max-w-2xl flex flex-col gap-10">
@@ -47,6 +50,7 @@ const events = [
 </template>
 
 <style scoped>
+/* Animación de aparición para los cards de la historia */
 .animate-fade-in-timeline {
     animation: fadeInTimeline 0.7s;
 }

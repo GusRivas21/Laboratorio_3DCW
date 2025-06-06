@@ -1,36 +1,25 @@
 <script setup>
-import { ref, onMounted, onUnmounted } from 'vue';
+// --- IMPORTS Y REACTIVIDAD ---
+// Importaciones de Vue y componentes necesarios
 import comidaImage from './img/comida.jpg';
 import AboutUsComponent from './AboutUsComponent.vue';
-
-const scrollY = ref(0);
-
-const handleScroll = () => {
-  scrollY.value = window.scrollY;
-};
-
-onMounted(() => {
-  window.addEventListener('scroll', handleScroll);
-});
-onUnmounted(() => {
-  window.removeEventListener('scroll', handleScroll);
-});
 </script>
 
 <template>
   <main class="text-white bg-black" >
-    <!-- Hero principal con efecto parallax JS -->
+    <!-- Hero principal sin parallax -->
     <section
       class="h-[80vh] md:h-screen flex flex-col justify-center items-center text-center px-4 relative"
       :style="{
         backgroundImage: `linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.7)), url(${comidaImage})`,
         backgroundAttachment: 'scroll',
         backgroundSize: 'cover',
-        backgroundPosition: `center ${Math.max(scrollY * 0.4, -100)}px`,
+        backgroundPosition: 'center',
         backgroundRepeat: 'no-repeat',
-        transition: 'background-position 1.2s',
+        transition: 'background-position 1.9s',
       }"
     >
+      <!-- Contenido principal del hero -->
       <div class="backdrop-blur-sm bg-black/30 rounded-xl p-8">
         <h1 class="text-5xl md:text-7xl font-extrabold text-red-400 drop-shadow-lg">GUS GU'S</h1>
         <h2 class="text-3xl md:text-5xl font-bold mt-2 tracking-widest">RESTAURANT</h2>
@@ -42,6 +31,7 @@ onUnmounted(() => {
     <section id="menu" class="bg-gradient-to-r dark:from-black dark:via-gray-900 dark:to-black py-20 px-4 pt-30">
       <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-white tracking-widest">Nuestro Menu</h2>
       <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
+        <!-- Card de menú destacado -->
         <div class="bg-gray-400 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
           <img src="./img/Primi piatti.jpg" alt="Primi piatti" class="rounded-lg mb-5 w-full h-48 object-cover shadow" />
           <h3 class="font-bold text-2xl mb-2 text-red-700">Primi piatti</h3>
@@ -62,7 +52,23 @@ onUnmounted(() => {
         </div>
       </div>
     </section>
+
+    <!-- Separador visual con imagen -->
+    <div
+      class="w-full h-16 md:h-20 flex items-center justify-center overflow-hidden relative my-[-2rem] z-20"
+      style="background: linear-gradient(to right, #1a1a1a 0%, #7f1d1d 50%, #1a1a1a 100%);"
+    >
+      <img
+        :src="comidaImage"
+        alt="Separador comida"
+        class="w-full h-full object-cover object-center shadow-lg opacity-80 border-t-4 border-red-400"
+        draggable="false"
+        style="border-radius:0;"
+      />
+    </div>
+
   </main>
+  <!-- Sección Sobre Nosotros -->
   <AboutUsComponent />
 </template>
 

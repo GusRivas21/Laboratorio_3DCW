@@ -1,9 +1,16 @@
 <script setup>
-import {ref, reactive, computed} from 'vue'
+// --- IMPORTS Y REACTIVIDAD ---
+import { ref, reactive, computed } from 'vue'
 import { useToast } from 'vue-toastification'
 
 const toast = useToast()
 
+// Estado y funciones para el formulario de pedidos
+// pedido: datos del pedido actual
+// comidas: lista de opciones de comida
+// enviado: indica si el pedido fue enviado
+// pedidoHecho: función para enviar el pedido al backend
+// resumen: resumen del pedido realizado
 const pedido = reactive({
     name: "",
     amount: "",

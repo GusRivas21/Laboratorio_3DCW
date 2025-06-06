@@ -1,12 +1,15 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
-const email = ref('')
-const password = ref('')
-const error = ref('')
+const email = ref('') // Email del usuario
+const password = ref('') // Contraseña del usuario
+const error = ref('') // Mensaje de error
 
+// --- FUNCIÓN DE LOGIN ---
+// Realiza la petición de login al backend y guarda el usuario en localStorage
 const login = async () => {
     try {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/login`, {
@@ -35,7 +38,7 @@ const login = async () => {
 }
 
 
-// Forma de hacerlo s
+// --- (Simulación de login comentada para pruebas locales) ---
 // const login = () => {
 //     // Simulación de usuarios
 //     const admin = {

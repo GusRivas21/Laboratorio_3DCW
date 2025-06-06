@@ -1,6 +1,6 @@
 <script setup>
-// Si tienes Heroicons instalados, puedes importar los íconos así:
-// import { EnvelopeIcon, PhoneIcon, MapPinIcon } from '@heroicons/vue/24/outline'
+// --- IMPORTS Y REACTIVIDAD ---
+// Importaciones de Vue y lógica para el footer si se requiere en el futuro
 </script>
 
 <template>

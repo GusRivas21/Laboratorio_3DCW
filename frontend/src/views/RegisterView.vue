@@ -1,14 +1,19 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
 import { ref } from 'vue'
 import { useRouter } from 'vue-router'
 
 const router = useRouter()
+
+// Datos del formulario de registro
 const name = ref('')
 const email = ref('')
 const password = ref('')
 const error = ref('')
 const success = ref('')
 
+// --- FUNCIÓN DE REGISTRO ---
+// Envía los datos al backend para crear un nuevo usuario
 const register = async () => {
     error.value = ''
     success.value = ''
@@ -20,7 +25,7 @@ const register = async () => {
         })
         if (!res.ok) {
             const data = await res.json()
-            throw new Error(data.error || 'Error al registrar usuario')
+            throw new Error(data.mensaje || data.error)
         }
         success.value = 'Usuario registrado correctamente. Ahora puedes iniciar sesión.'
         // Opcional: redirigir al login

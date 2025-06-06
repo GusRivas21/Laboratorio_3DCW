@@ -1,4 +1,7 @@
 <script setup>
+// --- IMPORTS Y REACTIVIDAD ---
+// Importaciones de Vue y componentes necesarios para la sección de servicios
+// Aquí puedes agregar lógica reactiva si en el futuro se requiere
 import { computed } from 'vue'
 //Esto es para importar las imágenes para los íconos de los servicios
 import pizza from '@/components/img/pizza.png'
