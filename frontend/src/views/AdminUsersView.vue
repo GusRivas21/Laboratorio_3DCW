@@ -67,12 +67,11 @@ const eliminarUser = async (id) => {
 </script>
 
 <template>
-    <div class="min-h-screen bg-gray-100 flex pt-24">
-        <aside class="w-64 bg-red-900 text-white flex flex-col py-8 px-4 shadow-lg">
+    <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex pt-24">
+        <aside class="w-64 bg-gradient-to-b from-black via-red-900 to-black text-white flex flex-col py-8 px-4 shadow-lg">
             <h1 class="text-2xl font-bold mb-8 text-center">Panel Admin</h1>
             <nav class="flex-1 flex flex-col gap-4">
                 <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition">Pedidos y Reservas</router-link>
-                <router-link to="/servicios" class="py-2 px-4 rounded hover:bg-red-700 transition">Gestionar Menú</router-link>
                 <router-link to="/admin/usuarios" class="py-2 px-4 rounded hover:bg-red-700 transition bg-red-700">Usuarios</router-link>
             </nav>
         </aside>

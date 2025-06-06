@@ -25,7 +25,7 @@ const login = async () => {
         localStorage.setItem('user', JSON.stringify(user))
         // Redirección según el rol y recarga total para actualizar la barra
         if (user.role === 'admin') {
-            window.location.href = '/admin'
+            window.location.href = '/inicio'
         } else {
             window.location.href = '/inicio'
         }

@@ -118,14 +118,6 @@ import router from '../routes/index'
                     <span v-else class="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-red-400 rounded transition-all duration-300"></span>
                 </router-link>
             </li>
-            <li>
-                <router-link :to="{ name: 'sobre' }" class="hover:text-red-100 transition relative group"
-                    :class="{ 'text-red-300': route.name === 'sobre' }">
-                    Sobre Nosotros
-                    <span v-if="route.name === 'sobre'" class="absolute left-0 -bottom-1 w-full h-0.5 bg-red-400 rounded transition-all duration-300"></span>
-                    <span v-else class="absolute left-0 -bottom-1 w-0 group-hover:w-full h-0.5 bg-red-400 rounded transition-all duration-300"></span>
-                </router-link>
-            </li>
             <!-- Opciones para admin -->
             <li v-if="user && user.role === 'admin'">
                 <router-link :to="{ name: 'admin' }" class="hover:text-red-100 transition relative group"
@@ -199,12 +191,6 @@ import router from '../routes/index'
                 :class="{ 'text-red-300': route.name === 'form' }" @click="toggleMobileMenu">
                 Formulario
                 <span v-if="route.name === 'form'" class="block mx-auto mt-1 h-0.5 w-2/3 bg-red-400 rounded transition-all duration-300"></span>
-                <span v-else class="block mx-auto mt-1 h-0.5 w-0 group-hover:w-2/3 bg-red-400 rounded transition-all duration-300"></span>
-            </router-link>
-            <router-link :to="{ name: 'sobre' }" class="text-2xl font-bold hover:text-red-100 relative group"
-                :class="{ 'text-red-300': route.name === 'sobre' }" @click="toggleMobileMenu">
-                Sobre Nosotros
-                <span v-if="route.name === 'sobre'" class="block mx-auto mt-1 h-0.5 w-2/3 bg-red-400 rounded transition-all duration-300"></span>
                 <span v-else class="block mx-auto mt-1 h-0.5 w-0 group-hover:w-2/3 bg-red-400 rounded transition-all duration-300"></span>
             </router-link>
             <router-link v-if="user && user.role === 'admin'" :to="{ name: 'admin' }" class="text-2xl font-bold hover:text-red-100 relative group"

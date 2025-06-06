@@ -18,7 +18,7 @@ const routes = [
     { path: '/perfil', component: ProfileView, name: 'perfil' }, //enlace al componente ProfileView
     { path: '/admin', component: AdminDashboard, name: 'admin' },
     { path: '/register', component: RegisterView, name: 'register' },
-    { path: '/admin/usuarios', component: () => import('../pages/AdminUsersView.vue'), name: 'admin-usuarios' },
+    { path: '/admin/usuarios', component: () => import('../views/AdminUsersView.vue'), name: 'admin-usuarios' },
 ]
 
 const router = createRouter({

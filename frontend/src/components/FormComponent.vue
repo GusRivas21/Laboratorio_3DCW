@@ -51,7 +51,7 @@ const resumen = computed(() => {
 </script>
 
 <template>
-  <div class="min-h-screen flex items-center justify-center bg-red-50 px-2">
+  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 py-12 px-4 pt-32">
     <div class="w-full max-w-md mx-auto bg-white rounded-lg shadow p-6">
       <h1 class="text-2xl font-bold text-center text-red-700 mb-6 tracking-wide">Ordene su comida</h1>
       <form @submit.prevent="pedidoHecho" class="flex flex-col gap-4">

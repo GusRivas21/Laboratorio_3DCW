@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, onUnmounted } from 'vue';
 import comidaImage from './img/comida.jpg';
+import AboutUsComponent from './AboutUsComponent.vue';
 
 const scrollY = ref(0);
 
@@ -25,7 +26,7 @@ onUnmounted(() => {
         backgroundImage: `linear-gradient(rgba(0,0,0,0.55),rgba(0,0,0,0.7)), url(${comidaImage})`,
         backgroundAttachment: 'scroll',
         backgroundSize: 'cover',
-        backgroundPosition: `center ${scrollY * 0.4}px`,
+        backgroundPosition: `center ${Math.max(scrollY * 0.4, -100)}px`,
         backgroundRepeat: 'no-repeat',
         transition: 'background-position 1.2s',
       }"
@@ -38,8 +39,8 @@ onUnmounted(() => {
     </section>
 
     <!-- Menú destacado -->
-    <section id="menu" class="bg-gray-900 py-20 px-4">
-      <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-red-400 tracking-widest">Nuestro Menu</h2>
+    <section id="menu" class="bg-gradient-to-r dark:from-black dark:via-gray-900 dark:to-black py-20 px-4 pt-30">
+      <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-white tracking-widest">Nuestro Menu</h2>
       <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
         <div class="bg-gray-400 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center">
           <img src="./img/Primi piatti.jpg" alt="Primi piatti" class="rounded-lg mb-5 w-full h-48 object-cover shadow" />
@@ -62,6 +63,7 @@ onUnmounted(() => {
       </div>
     </section>
   </main>
+  <AboutUsComponent />
 </template>
 
 <style scoped>
