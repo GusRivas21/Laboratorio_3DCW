@@ -50,18 +50,5 @@ const events = [
 </template>
 
 <style scoped>
-/* Animación de aparición para los cards de la historia */
-.animate-fade-in-timeline {
-    animation: fadeInTimeline 0.7s;
-}
-@keyframes fadeInTimeline {
-    from {
-        opacity: 0;
-        transform: translateY(40px) scale(0.95);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-    }
-}
+
 </style>
