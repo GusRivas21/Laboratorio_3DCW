@@ -28,7 +28,7 @@ import AboutUsComponent from './AboutUsComponent.vue';
     </section>
 
     <!-- Menú destacado -->
-    <section id="menu" class="bg-gradient-to-r dark:from-black dark:via-gray-900 dark:to-black py-20 px-4 pt-30">
+    <section id="menu" class="bg-gradient-to-r dark:from-black dark:via-gray-800 dark:to-black py-20 px-4 pt-30">
       <h2 class="text-center text-4xl md:text-5xl font-bold mb-14 text-white tracking-widest">Nuestro Menu</h2>
       <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
         <!-- Card de menú destacado -->

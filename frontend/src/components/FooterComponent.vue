@@ -1,6 +1,5 @@
 <script setup>
-// --- IMPORTS Y REACTIVIDAD ---
-// Importaciones de Vue y lógica para el footer si se requiere en el futuro
+
 </script>
 
 <template>
