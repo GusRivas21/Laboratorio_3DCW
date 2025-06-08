@@ -67,7 +67,7 @@ const eliminarUser = async (id) => {
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col pt-24">
+  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row pt-24">
     <!-- Barra lateral: lateral en desktop, barra horizontal bajo el navbar en móvil -->
     <aside
       class="w-full md:w-56 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black border-b-2 md:border-b-0 md:border-r-2 border-black z-20"
