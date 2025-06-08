@@ -86,7 +86,7 @@ onBeforeUnmount(() => {
 
 <template>
     <nav
-        class="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-black via-red-900 to-black text-white px-4 md:px-6 py-3 md:py-5 shadow-lg transition-transform duration-300"
+        class="fixed top-0 left-0 w-full z-50 bg-gradient-to-r from-black via-red-900 to-black text-white px-4 md:px-6 py-6 md:py-5 shadow-lg transition-transform duration-300"
         :style="{ transform: showHeader ? 'translateY(0)' : 'translateY(-120%)' }"
     >
         <div class="max-w-7xl mx-auto flex items-center justify-between">
