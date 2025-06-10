@@ -3,6 +3,7 @@ const serviceSchema = new mongoose.Schema({
   nombre: String,
   descripcion: String,
   imagen: String,
-  categoria: String
+  categoria: String,
+  precio: String
 })
 export default mongoose.model('Service', serviceSchema)
