@@ -4,6 +4,7 @@ import cors from 'cors'
 import dotenv from 'dotenv'
 import userRoutes from './routes/index.js'
 import orderRoutes from './routes/order.js'
+import servicesRoutes from './controllers/services.js'
 
 dotenv.config()
 
@@ -26,14 +27,13 @@ app.use(express.json())
 
 // Rutas
 app.use('/api/users', userRoutes)
+app.use('/api/orders', orderRoutes)
+app.use('/api/services', servicesRoutes)
 
 // Ruta base
 app.get('/', (req, res) => {
     res.send('¡Backend funcionando!')
 })
-
-// Rutas de pedidos y reservaciones
-app.use('/api/orders', orderRoutes)
 
 // Puerto
 const PORT = process.env.PORT || 5001

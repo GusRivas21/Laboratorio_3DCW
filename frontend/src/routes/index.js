@@ -12,6 +12,7 @@ const routes = [
     { path: '/', component: MainComponent }, //enlace que se conecta con el routerview de App.vue
     { path: '/inicio', component: MainComponent, name: 'inicio' }, //enlace al componente MainComponent
     { path: '/servicios', component: ServicesComponent, name: 'servicios' }, //enlace al componente ServicesComponent
+    { path: '/catalogo', component: () => import('../pages/ServiceCatalog.vue'), name: 'service-catalog' },
     { path: '/formulario', component: FormComponent, name: 'form' },  //enlace al componente FormComponent
     { path: '/sobre_nosotros', component: AboutUsComponent, name: 'sobre' }, //enlace al componente AboutUsComponent
     { path: '/login', component: LoginView, name: 'login' }, //enlace al componente LoginView
