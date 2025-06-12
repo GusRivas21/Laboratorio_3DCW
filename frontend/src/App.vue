@@ -1,6 +1,8 @@
 <script setup>
 import HeaderComponent from './components/HeaderComponent.vue';
 import FooterComponent from './components/FooterComponent.vue';
+import { provideCart } from '@/composables/useCart'
+provideCart()  
 </script>
 
 <template>

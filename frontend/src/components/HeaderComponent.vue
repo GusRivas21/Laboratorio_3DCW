@@ -4,12 +4,15 @@ import { ref, watchEffect, onMounted, onBeforeUnmount } from 'vue'
 import { useRoute } from 'vue-router'
 import { UserIcon } from '@heroicons/vue/24/solid'
 import router from '../routes/index'
+import { useCart } from '@/composables/useCart'
+import Cart from './Cart.vue' // 
 
 // --- ESTADO DE USUARIO Y MENÚ ---
 // user: datos del usuario logueado
 const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 const menuVisible = ref(false)
 const mobileMenu = ref(false)
+const { totalItems, cart } = useCart() //
 
 const route = useRoute()
 
@@ -57,7 +60,7 @@ const logout = () => {
     menuVisible.value = false
     mobileMenu.value = false
     syncUserAndNotify()
-    window.location.href = '/login' // Forzar recarga total
+    window.location.href = '/login'
 }
 
 // --- Lógica para ocultar header al hacer scroll hacia abajo y mostrarlo al subir ---
@@ -82,6 +85,12 @@ onMounted(() => {
 onBeforeUnmount(() => {
     window.removeEventListener('scroll', handleScrollHeader)
 })
+
+const showCart = ref(false) //
+
+const toggleCart = () => { // 
+    showCart.value = !showCart.value
+}
 </script>
 
 <template>
@@ -133,8 +142,16 @@ onBeforeUnmount(() => {
             </li>
         </ul>
 
-        <!-- Usuario / Login -->
+        <!-- Carrito y Usuario / Login -->
         <div class="flex items-center gap-2">
+            <!-- Icono del carrito -->
+            <button @click="toggleCart" class="relative mr-2" aria-label="Ver carrito">
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-7 w-7 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                        d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13l-1.35 2.7A1 1 0 007.6 17h8.8a1 1 0 00.95-.68L21 13M7 13V6a1 1 0 011-1h5a1 1 0 011 1v7" />
+                </svg>
+                <span v-if="totalItems" class="absolute -top-2 -right-2 bg-red-600 text-white rounded-full px-2 text-xs">{{ totalItems }}</span>
+            </button>
             <router-link v-if="!user" :to="{ name: 'login' }" class="hover:opacity-80">
             <UserIcon class="w-7 h-7 text-white" />
             </router-link>
@@ -163,6 +180,9 @@ onBeforeUnmount(() => {
             </button>
         </div>
         </div>
+
+        <!-- Carrito flotante -->
+        <Cart v-if="showCart" @close="showCart = false" />
 
         <!-- Menú móvil full screen -->
         <Transition

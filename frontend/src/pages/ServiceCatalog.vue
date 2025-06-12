@@ -1,6 +1,9 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
+import { useCart } from '@/composables/useCart' // <-- Agrega esto
+
+const { addToCart } = useCart() // <-- Agrega esto
 
 const route = useRoute()
 
@@ -101,11 +104,18 @@ watch(
               <p class="text-gray-700 text-sm mb-2 text-center">{{ servicio.descripcion }}</p>
               <p v-if="servicio.precio" class="text-green-700 font-bold mb-2 text-center">{{ servicio.precio }}</p>
               <button
+                v-if="categoriaSeleccionada !== 'reservaciones'"
                 class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition"
-                @click="() => {}"
+                @click="addToCart(servicio)"
+              >
+                Agregar al carrito
+              </button>
+              <button
+                v-else
+                class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition"
                 disabled
               >
-                {{ categoriaSeleccionada === 'reservaciones' ? 'Reservar' : 'Agregar al carrito' }}
+                Reservar
               </button>
             </div>
           </div>
