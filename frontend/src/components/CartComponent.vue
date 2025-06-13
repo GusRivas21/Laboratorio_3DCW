@@ -70,15 +70,23 @@ function updateQuantity(id, cantidad) {
 </script>
 
 <template>
-  <div class="fixed top-20 right-4 bg-white shadow-lg rounded-xl p-4 w-80 z-50">
-    <button class="absolute top-2 right-2 text-gray-500 text-2xl" @click="$emit('close')">&times;</button>
-    <h3 class="font-bold text-lg mb-2">Carrito</h3>
+  <div
+    class="fixed top-20 right-4 bg-white shadow-xl rounded-xl p-4 w-80 z-50
+           animate-fade-in-up transition-all duration-500 ease-out"
+  >
+    <button
+      class="absolute top-2 right-2 text-gray-500 text-2xl hover:text-red-500 transition-colors"
+      @click="$emit('close')"
+    >
+      &times;
+    </button>
+    <h3 class="font-bold text-lg mb-2 text-black">Carrito</h3>
     <div v-if="cart.length === 0" class="text-gray-500">El carrito está vacío.</div>
     <ul v-else>
       <li
         v-for="item in cart"
         :key="item._id"
-        class="flex items-center gap-3 mb-3 border-b pb-2"
+        class="flex items-center gap-3 mb-3 border-b pb-2 transition-transform duration-300 hover:scale-[1.02]"
       >
         <img
           :src="item.imagen"
@@ -95,13 +103,13 @@ function updateQuantity(id, cantidad) {
               min="1"
               :value="item.cantidad"
               @input="updateQuantity(item._id, +$event.target.value)"
-              class="w-12 border rounded px-1 text-center"
+              class="w-12 border rounded px-1 text-center transition focus:outline-none focus:ring-2 focus:ring-green-500"
             />
           </div>
         </div>
         <button
           @click="removeFromCart(item._id)"
-          class="text-red-600 hover:underline text-xs"
+          class="text-red-600 hover:underline text-xs transition-colors"
         >
           Quitar
         </button>
@@ -116,7 +124,8 @@ function updateQuantity(id, cantidad) {
       v-if="cart.length"
       @click="handleOrder"
       :disabled="loading"
-      class="mt-2 bg-green-600 text-white px-3 py-1 rounded w-full"
+      class="mt-2 bg-green-600 text-white px-3 py-1 rounded w-full
+             hover:bg-green-700 disabled:opacity-50 transition-colors"
     >
       {{ loading ? 'Enviando...' : 'Pedir' }}
     </button>
@@ -124,9 +133,26 @@ function updateQuantity(id, cantidad) {
     <button
       v-if="cart.length"
       @click="clearCart"
-      class="mt-2 bg-red-600 text-white px-3 py-1 rounded w-full"
+      class="mt-2 bg-red-600 text-white px-3 py-1 rounded w-full
+             hover:bg-red-700 transition-colors"
     >
       Vaciar carrito
     </button>
   </div>
 </template>
+
+<style scoped>
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.4s ease-out;
+}
+</style>

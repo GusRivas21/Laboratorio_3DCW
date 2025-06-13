@@ -81,9 +81,9 @@ watch(
         :key="cat"
         @click="seleccionarCategoria(cat)"
         :class=" [
-          'py-2 px-6 rounded-full font-bold transition',
+          'py-2 px-6 rounded-full font-bold transition duration-300 transform hover:scale-105',
           categoriaSeleccionada === cat
-            ? 'bg-red-700 text-white shadow'
+            ? 'bg-red-700 text-white shadow-md'
             : 'bg-white text-red-700 border border-red-300 hover:bg-red-100'
         ]"
       >
@@ -93,33 +93,38 @@ watch(
 
     <!-- Contenido principal -->
     <main class="flex-1 p-2 md:p-8 max-w-7xl mx-auto w-full">
-      <h2 class="text-3xl font-bold text-red-900 mb-6 capitalize text-center">
+      <h2 class="text-3xl font-bold text-red-900 mb-6 capitalize text-center animate-fade-in-up">
         {{ categoriaSeleccionada.replace(/-/g, ' ') }}
       </h2>
       <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
-        <div v-if="loading" class="text-gray-500">Cargando...</div>
+        <div v-if="loading" class="text-gray-500 animate-pulse">Cargando...</div>
         <div v-else-if="error" class="text-red-600">{{ error }}</div>
         <div v-else>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-8">
             <div
               v-for="servicio in serviciosPagina()"
               :key="servicio._id"
-              class="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center"
+              class="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center
+                     transform transition duration-300 hover:scale-105 hover:shadow-xl animate-fade-in-up"
             >
-              <img :src="servicio.imagen" :alt="servicio.nombre" class="w-full h-32 object-cover rounded mb-3" />
+              <img
+                :src="servicio.imagen"
+                :alt="servicio.nombre"
+                class="w-full h-32 object-cover rounded mb-3 transition duration-300 hover:opacity-90"
+              />
               <h3 class="font-bold text-lg text-red-700 mb-1">{{ servicio.nombre }}</h3>
               <p class="text-gray-700 text-sm mb-2 text-center">{{ servicio.descripcion }}</p>
               <p v-if="servicio.precio" class="text-green-700 font-bold mb-2 text-center">{{ servicio.precio }}</p>
               <button
                 v-if="categoriaSeleccionada !== 'reservaciones'"
-                class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition"
+                class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition duration-300"
                 @click="addToCart(servicio)"
               >
                 Agregar al carrito
               </button>
               <button
                 v-else
-                class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition"
+                class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition duration-300"
                 @click="mostrarFormulario(servicio)"
               >
                 Reservar
@@ -132,13 +137,13 @@ watch(
             <button
               :disabled="pagina === 1"
               @click="pagina--"
-              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
             >Anterior</button>
             <span class="px-4 py-1 font-bold">{{ pagina }} / {{ totalPaginas }}</span>
             <button
               :disabled="pagina === totalPaginas"
               @click="pagina++"
-              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50 transition"
             >Siguiente</button>
           </div>
         </div>
@@ -149,3 +154,19 @@ watch(
     </main>
   </div>
 </template>
+
+<style scoped>
+@keyframes fade-in-up {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.animate-fade-in-up {
+  animation: fade-in-up 0.5s ease-out both;
+}
+</style>

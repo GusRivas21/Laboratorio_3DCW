@@ -50,7 +50,7 @@ function goToService(service) {
 
 
 <template>
-  <section class="relative bg-cover bg-center py-16 px-4" :style="{ backgroundImage: 'url(https://i.pinimg.com/736x/59/19/34/591934ea0438900629d4f72f3eb1ae7d.jpg)' }">
+  <section class="relative bg-cover bg-center py-16 px-4" :style="{ backgroundImage: 'url(https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/a2/95/e0/disponible-para-reservas.jpg?w=900&h=500&s=1)' }">
     <h2 class="text-center text-white text-3xl font-bold mb-12">Nuestros Servicios</h2>
     <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
       <div
@@ -59,7 +59,8 @@ function goToService(service) {
         class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center cursor-pointer"
         @click="goToService(service)"
       >
-        <img :src="service.icon" :alt="service.title" class="rounded-lg mb-5 w-full h-40 object-cover shadow" />
+        <!-- Imagen ajustada con tamaño más grande pero proporcional -->
+        <img :src="service.icon" :alt="service.title" class="rounded-lg mb-4 w-36 h-36 object-contain shadow" />
         <h3 class="font-bold text-2xl mb-2 text-red-700">{{ service.title }}</h3>
         <p class="mb-2 text-center">{{ service.description }}</p>
       </div>
