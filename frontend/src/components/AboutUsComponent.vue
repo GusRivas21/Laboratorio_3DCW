@@ -33,93 +33,92 @@ const events = [
 
 <template>
     <!-- Sección Sobre Nosotros: muestra la historia del restaurante en cards -->
-    <section
-        class="relative py-16 px-4 md:px-0 bg-gradient-to-r dark:from-black dark:via-gray-800 dark:to-black overflow-hidden">
-        <div class="absolute inset-0 pointer-events-none select-none opacity-40 mix-blend-multiply"
+    <section class="relative py-16 px-4 md:px-0 bg-black overflow-hidden">
+        <div class="absolute inset-0 pointer-events-none select-none opacity-20 mix-blend-multiply"
             style="background: url('/src/assets/img/fondo.jpg') center/cover no-repeat;"></div>
         <div class="relative max-w-4xl mx-auto text-center z-10">
-            <h2 class="text-4xl md:text-5xl font-extrabold text-white mb-4 drop-shadow">Sobre Nosotros</h2>
+            <h2 class="text-4xl md:text-5xl font-extrabold text-gray-100 mb-4 drop-shadow">Sobre Nosotros</h2>
             <p class="text-lg md:text-xl text-gray-400 mb-6 max-w-2xl mx-auto">
-                Somos un restaurante familiar con <span class="font-bold text-red-600">4 años de historia</span> en el
+                Somos un restaurante familiar con <span class="font-bold text-gray-300">4 años de historia</span> en el
                 corazón de la ciudad, fusionando tradición italiana y creatividad local. Nuestra pasión es ofrecer
                 experiencias memorables a través de la comida, el servicio y el ambiente.
             </p>
-            <blockquote class="italic text-white text-xl md:text-2xl mb-8">“La mejor mesa es la que se comparte con
+            <blockquote class="italic text-gray-300 text-xl md:text-2xl mb-8">“La mejor mesa es la que se comparte con
                 quienes amas.”</blockquote>
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-10">
                 <div class="flex flex-col items-center">
-                    <span class="text-4xl mb-2">🍝</span>
-                    <h3 class="font-bold text-lg text-white mb-1">Calidad Artesanal</h3>
+                    <span class="text-4xl text-gray-300 mb-2">🍝</span>
+                    <h3 class="font-bold text-lg text-gray-100 mb-1">Calidad Artesanal</h3>
                     <p class="text-gray-400 text-sm">Pastas y pizzas hechas a mano, ingredientes frescos y recetas
                         auténticas.</p>
                 </div>
                 <div class="flex flex-col items-center">
-                    <span class="text-4xl mb-2">🤝</span>
-                    <h3 class="font-bold text-lg text-white mb-1">Cercanía y Servicio</h3>
+                    <span class="text-4xl text-gray-300 mb-2">🤝</span>
+                    <h3 class="font-bold text-lg text-gray-100 mb-1">Cercanía y Servicio</h3>
                     <p class="text-gray-400 text-sm">Atención cálida, ambiente familiar y compromiso con cada cliente.
                     </p>
                 </div>
                 <div class="flex flex-col items-center">
-                    <span class="text-4xl mb-2">⏳</span>
-                    <h3 class="font-bold text-lg text-white mb-1">Creciendo Juntos</h3>
+                    <span class="text-4xl text-gray-300 mb-2">⏳</span>
+                    <h3 class="font-bold text-lg text-gray-100 mb-1">Creciendo Juntos</h3>
                     <p class="text-gray-400 text-sm">Más de 4 años compartiendo historias, celebraciones y nuevos
                         sabores.</p>
                 </div>
             </div>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <div class="bg-white/80 rounded-xl shadow-lg p-6 text-left flex flex-col gap-3">
-                    <h4 class="font-semibold text-red-700 mb-2">Nuestra Filosofía</h4>
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6 text-left flex flex-col gap-3">
+                    <h4 class="font-semibold text-gray-300 mb-2">Nuestra Filosofía</h4>
                     <div class="flex flex-col gap-3">
                         <div class="flex items-start gap-3">
-                            <span class="text-2xl">👨‍👩‍👧‍👦</span>
+                            <span class="text-2xl text-gray-300">👨‍👩‍👧‍👦</span>
                             <div>
-                                <span class="font-bold text-red-700">Unión familiar:</span>
-                                <span class="text-gray-700"> La comida une a las personas y cada plato es una invitación
+                                <span class="font-bold text-gray-300">Unión familiar:</span>
+                                <span class="text-gray-400"> La comida une a las personas y cada plato es una invitación
                                     a compartir.</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="text-2xl">💡</span>
+                            <span class="text-2xl text-gray-300">💡</span>
                             <div>
-                                <span class="font-bold text-red-700">Innovación con raíces:</span>
-                                <span class="text-gray-700"> Nos reinventamos sin perder la esencia tradicional que nos
+                                <span class="font-bold text-gray-300">Innovación con raíces:</span>
+                                <span class="text-gray-400"> Nos reinventamos sin perder la esencia tradicional que nos
                                     caracteriza.</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="text-2xl">🤲</span>
+                            <span class="text-2xl text-gray-300">🤲</span>
                             <div>
-                                <span class="font-bold text-red-700">Respeto y honestidad:</span>
-                                <span class="text-gray-700"> Son la base de nuestro equipo y de la relación con nuestros
+                                <span class="font-bold text-gray-300">Respeto y honestidad:</span>
+                                <span class="text-gray-400"> Son la base de nuestro equipo y de la relación con nuestros
                                     clientes.</span>
                             </div>
                         </div>
                     </div>
                 </div>
-                <div class="bg-white/80 rounded-xl shadow-lg p-6 text-left flex flex-col gap-3">
-                    <h4 class="font-semibold text-red-700 mb-2">Un Poco de Nuestra Historia</h4>
+                <div class="bg-gray-800 rounded-xl shadow-lg p-6 text-left flex flex-col gap-3">
+                    <h4 class="font-semibold text-gray-300 mb-2">Un Poco de Nuestra Historia</h4>
                     <div class="flex flex-col gap-3">
                         <div class="flex items-start gap-3">
-                            <span class="text-2xl">🏠</span>
+                            <span class="text-2xl text-gray-300">🏠</span>
                             <div>
-                                <span class="font-bold text-red-700">Fundado en 2021:</span>
-                                <span class="text-gray-700"> Por la familia Guzmán, con el sueño de compartir su
+                                <span class="font-bold text-gray-300">Fundado en 2021:</span>
+                                <span class="text-gray-400"> Por la familia Guzmán, con el sueño de compartir su
                                     sazón.</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="text-2xl">🍽️</span>
+                            <span class="text-2xl text-gray-300">🍽️</span>
                             <div>
-                                <span class="font-bold text-red-700">10,000+ platos servidos:</span>
-                                <span class="text-gray-700"> y cientos de eventos especiales celebrados con nuestros
+                                <span class="font-bold text-gray-300">10,000+ platos servidos:</span>
+                                <span class="text-gray-400"> y cientos de eventos especiales celebrados con nuestros
                                     clientes.</span>
                             </div>
                         </div>
                         <div class="flex items-start gap-3">
-                            <span class="text-2xl">🏅</span>
+                            <span class="text-2xl text-gray-300">🏅</span>
                             <div>
-                                <span class="font-bold text-red-700">Reconocidos por la comunidad:</span>
-                                <span class="text-gray-700"> por nuestro sabor, hospitalidad y constancia.</span>
+                                <span class="font-bold text-gray-300">Reconocidos por la comunidad:</span>
+                                <span class="text-gray-400"> por nuestro sabor, hospitalidad y constancia.</span>
                             </div>
                         </div>
                     </div>

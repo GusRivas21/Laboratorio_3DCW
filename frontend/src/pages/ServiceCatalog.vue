@@ -1,25 +1,27 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
-import { useCart } from '@/composables/useCart' // <-- Agrega esto
+import { useCart } from '@/composables/useCart'
+import ReservationForm from '@/components/ReservationForm.vue' // Asegúrate de que esta ruta esté bien
 
-const { addToCart } = useCart() // <-- Agrega esto
-
+const { addToCart } = useCart()
 const route = useRoute()
 
-// --- ESTADO Y CATEGORÍAS ---
 const categorias = ref(['comida', 'cocteleria', 'reservaciones'])
 const categoriaSeleccionada = ref(categorias.value[0])
 const servicios = ref([])
 const loading = ref(false)
 const error = ref('')
 
-// --- PAGINACIÓN ---
+// Paginación
 const pagina = ref(1)
 const porPagina = 4
 const totalPaginas = ref(1)
 
-// Obtener servicios por categoría
+// Mostrar formulario de reserva
+const mostrarFormularioReserva = ref(false)
+const servicioSeleccionado = ref(null)
+
 const fetchServicios = async () => {
   loading.value = true
   error.value = ''
@@ -42,13 +44,16 @@ const seleccionarCategoria = (cat) => {
   fetchServicios()
 }
 
-// Servicios a mostrar en la página actual
 const serviciosPagina = () => {
   const start = (pagina.value - 1) * porPagina
   return servicios.value.slice(start, start + porPagina)
 }
 
-// --- CICLO DE VIDA ---
+const mostrarFormulario = (servicio) => {
+  servicioSeleccionado.value = servicio
+  mostrarFormularioReserva.value = true
+}
+
 onMounted(() => {
   if (route.query.categoria && categorias.value.includes(route.query.categoria)) {
     categoriaSeleccionada.value = route.query.categoria
@@ -69,6 +74,7 @@ watch(
 
 <template>
   <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col pt-24">
+    <!-- Botones de categoría -->
     <div class="w-full flex justify-center gap-4 py-4 bg-gradient-to-r from-black via-red-900 to-black">
       <button
         v-for="cat in categorias"
@@ -84,6 +90,7 @@ watch(
         {{ cat.replace(/-/g, ' ') }}
       </button>
     </div>
+
     <!-- Contenido principal -->
     <main class="flex-1 p-2 md:p-8 max-w-7xl mx-auto w-full">
       <h2 class="text-3xl font-bold text-red-900 mb-6 capitalize text-center">
@@ -113,12 +120,13 @@ watch(
               <button
                 v-else
                 class="bg-red-600 text-white px-4 py-2 rounded mt-2 hover:bg-red-700 transition"
-                disabled
+                @click="mostrarFormulario(servicio)"
               >
                 Reservar
               </button>
             </div>
           </div>
+
           <!-- Paginación -->
           <div v-if="totalPaginas > 1" class="flex justify-center mt-8 gap-2">
             <button
@@ -135,6 +143,9 @@ watch(
           </div>
         </div>
       </div>
+
+      <!-- Mostrar formulario de reserva -->
+      <ReservationForm v-if="mostrarFormularioReserva" :servicio="servicioSeleccionado" />
     </main>
   </div>
 </template>
