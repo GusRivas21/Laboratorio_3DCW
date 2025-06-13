@@ -226,7 +226,7 @@ onMounted(() => {
                   </tr>
                 </thead>
                 <tbody>
-                  <tr v-for="usuario in usuariosPagina" :key="usuario._id" class="border-b hover:bg-red-50">
+                  <tr v-for="usuario in usuariosPagina.value" :key="usuario._id" class="border-b hover:bg-red-50">
                     <td class="py-2 px-3">{{ usuario.name }}</td>
                     <td class="py-2 px-3">{{ usuario.email }}</td>
                     <td class="py-2 px-3">{{ usuario.role }}</td>
@@ -244,13 +244,17 @@ onMounted(() => {
                 :disabled="paginaUsuarios === 1"
                 @click="paginaUsuarios--"
                 class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-              >Anterior</button>
-              <span class="px-4 py-1 font-bold">{{ paginaUsuarios }} / {{ totalPaginasUsuarios }}</span>
+              >
+                Anterior
+              </button>
+              <span>Página {{ paginaUsuarios }} de {{ totalPaginasUsuarios }}</span>
               <button
                 :disabled="paginaUsuarios === totalPaginasUsuarios"
                 @click="paginaUsuarios++"
                 class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-              >Siguiente</button>
+              >
+                Siguiente
+              </button>
             </div>
             <p class="text-xs text-gray-500">
               Total usuarios: {{ usuarios.length }} | Página actual: {{ paginaUsuarios }} | Total páginas: {{ totalPaginasUsuarios }}

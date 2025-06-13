@@ -5,7 +5,7 @@ import { useRoute } from 'vue-router'
 import { UserIcon } from '@heroicons/vue/24/solid'
 import router from '../routes/index'
 import { useCart } from '@/composables/useCart'
-import Cart from './Cart.vue' // 
+import Cart from './CartComponent.vue' // 
 
 // --- ESTADO DE USUARIO Y MENÚ ---
 // user: datos del usuario logueado

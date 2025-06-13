@@ -1,40 +1,61 @@
-import { ref, computed, provide, inject } from 'vue'
+import { ref, computed, watch } from 'vue'
 
-const cartSymbol = Symbol('cart')
+function getUserKey() {
+  const user = JSON.parse(localStorage.getItem('user') || 'null')
+  return user ? `cart_${user.email || user._id}` : 'cart_guest'
+}
 
-export function provideCart() {
-  const cart = ref([])
-
-  const addToCart = (product) => {
-    const found = cart.value.find(item => item._id === product._id)
-    if (found) {
-      found.cantidad++
-    } else {
-      cart.value.push({ ...product, cantidad: 1 })
-    }
+function loadCart() {
+  const key = getUserKey()
+  try {
+    return JSON.parse(localStorage.getItem(key)) || []
+  } catch {
+    return []
   }
+}
 
-  const removeFromCart = (id) => {
-    cart.value = cart.value.filter(item => item._id !== id)
+const cart = ref(loadCart())
+
+function saveCart() {
+  const key = getUserKey()
+  localStorage.setItem(key, JSON.stringify(cart.value))
+}
+
+const addToCart = (product) => {
+  const found = cart.value.find(item => item._id === product._id)
+  if (found) {
+    found.cantidad++
+  } else {
+    cart.value.push({ ...product, cantidad: 1 })
   }
+  saveCart()
+}
 
-  const clearCart = () => {
-    cart.value = []
-  }
+const removeFromCart = (id) => {
+  cart.value = cart.value.filter(item => item._id !== id)
+  saveCart()
+}
 
-  const totalItems = computed(() => cart.value.reduce((sum, item) => sum + item.cantidad, 0))
+const clearCart = () => {
+  cart.value = []
+  saveCart()
+}
 
-  provide(cartSymbol, {
+const totalItems = computed(() => cart.value.reduce((sum, item) => sum + item.cantidad, 0))
+
+// Cuando cambia el usuario, recarga el carrito correspondiente
+window.addEventListener('user-updated', () => {
+  cart.value = loadCart()
+})
+
+watch(cart, saveCart, { deep: true })
+
+export function useCart() {
+  return {
     cart,
     addToCart,
     removeFromCart,
     clearCart,
     totalItems
-  })
-}
-
-export function useCart() {
-  const cartContext = inject(cartSymbol)
-  if (!cartContext) throw new Error('Cart not provided')
-  return cartContext
+  }
 }
