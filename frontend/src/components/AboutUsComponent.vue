@@ -101,7 +101,7 @@ const events = [
                             <span class="text-2xl text-gray-700">🏠</span>
                             <div>
                                 <span class="font-bold text-gray-900">Fundado en 2021:</span>
-                                <span class="text-gray-700"> Por la familia Guzmán, con el sueño de compartir su
+                                <span class="text-gray-700"> Por la familia Rivas, con el sueño de compartir su
                                     sazón.</span>
                             </div>
                         </div>

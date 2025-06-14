@@ -140,7 +140,10 @@ function cancelRemove() {
         <img :src="item.imagen" :alt="item.nombre" class="w-14 h-14 object-cover rounded" />
         <div class="flex-1">
           <div class="font-semibold text-black">{{ item.nombre }}</div>
-          <div class="text-gray-600 text-sm">${{ item.precio }} x {{ item.cantidad }}</div>
+          <div class="text-gray-600 text-sm flex items-center gap-2">
+            ${{ item.precio }} x
+            <input type="number" min="1" v-model.number="item.cantidad" @change="updateQuantity(item._id, item.cantidad)" class="w-16 text-center border rounded mx-1 appearance-auto" />
+          </div>
         </div>
         <button @click="askRemoveItem(item)" class="text-red-600 hover:text-red-800 text-xl font-bold">&times;</button>
       </li>
