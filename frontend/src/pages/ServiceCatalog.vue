@@ -2,7 +2,7 @@
 import { ref, onMounted, watch } from 'vue'
 import { useRoute } from 'vue-router'
 import { useCart } from '@/composables/useCart'
-import ReservationForm from '@/components/ReservationForm.vue' // Asegúrate de que esta ruta esté bien
+import ReservationForm from '@/components/ReservationForm.vue'
 
 const { addToCart } = useCart()
 const route = useRoute()
