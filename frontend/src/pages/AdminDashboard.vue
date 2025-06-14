@@ -137,18 +137,11 @@ onMounted(() => {
 
 <template>
   <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row">
-    <!-- Navbar superior -->
-    <nav class="navbar w-full flex items-center justify-between bg-black bg-opacity-90 px-4 py-3 shadow-lg z-30 md:fixed md:top-0 md:left-0 md:right-0 md:z-40">
-      <div class="flex items-center gap-3 logo-container">
-        <img src="/src/assets/logo.svg" alt="Logo" class="logo" />
-        <span class="font-bold text-lg text-white tracking-widest">ADMIN</span>
-      </div>
-    </nav>
     <!-- Barra lateral: horizontal en móvil, vertical en desktop -->
     <aside class="w-full md:w-64 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen
       bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black
-      border-b-2 md:border-b-0 md:border-r-2 border-black z-20 overflow-x-auto md:pt-30">
-      <nav class="flex-1 flex flex-row md:flex-col gap-2 md:gap-4 justify-center md:justify-start w-full">
+      border-b-2 md:border-b-0 md:border-r-2 border-black z-20 overflow-x-auto"> <!--md:pt-30-->
+      <nav class="flex-1 flex flex-row md:flex-col gap-2 md:gap-4 justify-center md:justify-start w-full pt-24">
         <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition whitespace-nowrap"
           :class="{ 'bg-red-700': $route.path === '/admin' }">
           Pedidos y Reservas
@@ -161,10 +154,10 @@ onMounted(() => {
       </nav>
     </aside>
     <!-- Contenido principal -->
-    <main class="flex-1 p-2 md:p-8 overflow-x-auto pt-24">
+    <main class="flex-1 p-2 md:p-8 overflow-x-auto pt-20">
       <!-- Pedidos y Reservas -->
       <template v-if="$route.path === '/admin'">
-        <h2 class="text-3xl font-bold text-red-900 mb-6 pt-24">Pedidos y Reservas</h2>
+        <h2 class="text-3xl font-bold text-red-900 mb-6 pt-18">Pedidos y Reservas</h2>
         <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
           <div v-if="loading" class="text-gray-500">Cargando...</div>
           <div v-else-if="error" class="text-red-600">{{ error }}</div>
