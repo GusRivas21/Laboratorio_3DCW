@@ -1,5 +1,8 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue'
+import { useToast } from 'vue-toastification'
+
+const toast = useToast()
 
 const usuarios = ref([])
 const loading = ref(true)
@@ -18,91 +21,111 @@ const paginatedUsuarios = computed(() => {
 })
 
 const fetchUsuarios = async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
-        if (!res.ok) throw new Error('Error al cargar los usuarios.')
-        usuarios.value = await res.json()
-        // Reinicia a la primera página si cambia la cantidad de usuarios
-        currentPage.value = 1
-    } catch (err) {
-        error.value = 'Error al cargar los usuarios.'
-    } finally {
-        loading.value = false
-    }
+  loading.value = true
+  error.value = ''
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
+    if (!res.ok) throw new Error('Error al cargar los usuarios.')
+    usuarios.value = await res.json()
+    // Reinicia a la primera página si cambia la cantidad de usuarios
+    //currentPage.value = 1
+  } catch (err) {
+    error.value = 'Error al cargar los usuarios.'
+  } finally {
+    loading.value = false
+  }
 }
 
 onMounted(() => {
-    fetchUsuarios()
+  fetchUsuarios()
 })
 
 const startEditUser = (user) => {
-    usuarioEditando.value = user._id
-    usuarioForm.value = { name: user.name, email: user.email, role: user.role }
-    usuarioError.value = ''
+  usuarioEditando.value = user._id
+  usuarioForm.value = { name: user.name, email: user.email, role: user.role }
+  usuarioError.value = ''
 }
 
 const cancelarEditUser = () => {
-    usuarioEditando.value = null
-    usuarioForm.value = { name: '', email: '', role: '' }
-    usuarioError.value = ''
+  usuarioEditando.value = null
+  usuarioForm.value = { name: '', email: '', role: '' }
+  usuarioError.value = ''
 }
 
 const guardarEditUser = async (id) => {
-    usuarioError.value = ''
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(usuarioForm.value)
-        })
-        if (!res.ok) throw new Error('Error al editar usuario')
-        await fetchUsuarios()
-        cancelarEditUser()
-    } catch (err) {
-        usuarioError.value = err.message
-    }
+  usuarioError.value = ''
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(usuarioForm.value)
+    })
+    if (!res.ok) throw new Error('Error al editar usuario')
+    await fetchUsuarios()
+    cancelarEditUser()
+  } catch (err) {
+    usuarioError.value = err.message
+  }
+}
+
+const showConfirm = ref(false)
+const userToDelete = ref(null)
+
+function askRemoveUser(user) {
+  userToDelete.value = user
+  showConfirm.value = true
+}
+function confirmRemoveUser() {
+  eliminarUser(userToDelete.value._id)
+  showConfirm.value = false
+  userToDelete.value = null
+}
+function cancelRemoveUser() {
+  showConfirm.value = false
+  userToDelete.value = null
 }
 
 const eliminarUser = async (id) => {
-    if (!confirm('¿Seguro que deseas eliminar este usuario?')) return
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, { method: 'DELETE' })
-        if (!res.ok) throw new Error('Error al eliminar usuario')
-        await fetchUsuarios()
-    } catch (err) {
-        alert('Error al eliminar usuario')
-    }
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error('Error al eliminar usuario')
+    await fetchUsuarios()
+    toast.success('Usuario eliminado correctamente')
+  } catch (err) {
+    toast.error('Error al eliminar usuario')
+  }
 }
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row pt-24">
+  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row">
+    <!-- Modal de confirmación para eliminar usuario -->
+    <div v-if="showConfirm" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div class="bg-white rounded-xl shadow-lg p-6 w-80 max-w-full text-center">
+        <h4 class="text-lg font-bold mb-4 text-red-700">¿Seguro que deseas eliminar este usuario?</h4>
+        <div class="flex justify-center gap-4 mt-2">
+          <button @click="confirmRemoveUser" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Sí, eliminar</button>
+          <button @click="cancelRemoveUser" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancelar</button>
+        </div>
+      </div>
+    </div>
     <!-- Barra lateral: lateral en desktop, barra horizontal bajo el navbar en móvil -->
-    <aside
-      class="w-full md:w-56 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen
-             bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black
-             border-b-2 md:border-b-0 md:border-r-2 border-black z-20 overflow-x-auto"
-    >
+    <aside class="w-full md:w-64 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen
+              bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black
+              border-b-2 md:border-b-0 md:border-r-2 border-black z-20 overflow-x-auto md:pt-30">
       <nav class="flex-1 flex flex-row md:flex-col gap-2 md:gap-4 justify-center md:justify-start w-full">
-        <router-link
-          to="/admin"
-          class="py-2 px-4 rounded hover:bg-red-700 transition whitespace-nowrap"
-        >
+        <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition whitespace-nowrap">
           Pedidos y Reservas
         </router-link>
-        <router-link
-          to="/admin/usuarios"
-          class="py-2 px-4 rounded hover:bg-red-700 transition bg-red-700 whitespace-nowrap"
-        >
+        <router-link to="/admin/usuarios"
+          class="py-2 px-4 rounded hover:bg-red-700 transition bg-red-700 whitespace-nowrap">
           Usuarios
         </router-link>
       </nav>
     </aside>
     <!-- Contenido principal -->
-    <main class="flex-1 p-2 md:p-8 overflow-x-auto">
-      <h2 class="text-3xl font-bold text-red-900 mb-6">Usuarios Registrados</h2>
+    <main class="flex-1 p-2 md:p-8 overflow-x-auto pt-24">
+      <h2 class="text-3xl font-bold text-red-900 mb-6 pt-24">Usuarios Registrados</h2>
       <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
         <div v-if="loading" class="text-gray-500">Cargando...</div>
         <div v-else-if="error" class="text-red-600">{{ error }}</div>
@@ -133,10 +156,12 @@ const eliminarUser = async (id) => {
                     </select>
                   </td>
                   <td class="py-2 px-3 flex gap-2 flex-wrap">
-                    <button @click="guardarEditUser(user._id)" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+                    <button @click="guardarEditUser(user._id)"
+                      class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
                       Guardar
                     </button>
-                    <button @click="cancelarEditUser" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">
+                    <button @click="cancelarEditUser"
+                      class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">
                       Cancelar
                     </button>
                   </td>
@@ -146,10 +171,12 @@ const eliminarUser = async (id) => {
                   <td class="py-2 px-3 break-all">{{ user.email }}</td>
                   <td class="py-2 px-3 capitalize">{{ user.role }}</td>
                   <td class="py-2 px-3 flex gap-2 flex-wrap">
-                    <button @click="startEditUser(user)" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                    <button @click="startEditUser(user)"
+                      class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
                       Editar
                     </button>
-                    <button @click="eliminarUser(user._id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                    <button @click="askRemoveUser(user)"
+                      class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
                       Eliminar
                     </button>
                   </td>
@@ -160,19 +187,13 @@ const eliminarUser = async (id) => {
         </div>
         <!-- Controles de paginación -->
         <div class="flex justify-center items-center gap-2 mt-4" v-if="totalPages > 1">
-          <button
-            class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
-            :disabled="currentPage === 1"
-            @click="currentPage--"
-          >
+          <button class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300" :disabled="currentPage === 1"
+            @click="currentPage--">
             Anterior
           </button>
           <span>Página {{ currentPage }} de {{ totalPages }}</span>
-          <button
-            class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
-            :disabled="currentPage === totalPages"
-            @click="currentPage++"
-          >
+          <button class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300" :disabled="currentPage === totalPages"
+            @click="currentPage++">
             Siguiente
           </button>
         </div>

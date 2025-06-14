@@ -1,9 +1,11 @@
 <script setup>
 import { computed, ref } from 'vue'
 import { useCart } from '@/composables/useCart'
+import { useToast } from 'vue-toastification'
 
 // Obtiene estado y funciones del carrito
 const { cart, removeFromCart, clearCart } = useCart()
+const toast = useToast()
 
 // Emite evento para cerrar el carrito
 defineEmits(['close'])
@@ -13,6 +15,10 @@ const user = ref(JSON.parse(localStorage.getItem('user') || 'null'))
 
 // Estado de carga para el botón de pedido
 const loading = ref(false)
+
+// Estado para el modal de confirmación
+const showConfirm = ref(false)
+const itemToDelete = ref(null)
 
 // Calcula el total del carrito sumando precio * cantidad
 const total = computed(() =>
@@ -31,15 +37,11 @@ const total = computed(() =>
 async function handleOrder() {
   // Validaciones: usuario, rol y carrito vacío
   if (!user.value) {
-    alert('Debes iniciar sesión para poder pedir.')
-    return
-  }
-  if (user.value.role === 'admin') {
-    alert('Los administradores no pueden realizar pedidos.')
+    toast.error('Debes iniciar sesión para poder pedir.')
     return
   }
   if (!cart.value.length) {
-    alert('El carrito está vacío.')
+    toast.info('El carrito está vacío.')
     return
   }
 
@@ -66,12 +68,12 @@ async function handleOrder() {
 
     if (!res.ok) throw new Error('No se pudo registrar el pedido')
 
-    alert('¡Pedido realizado con éxito!')
+    toast.success('¡Pedido realizado con éxito!')
     clearCart()
     // Opcional: cerrar el carrito
     // emit('close')
   } catch (err) {
-    alert('Error al realizar el pedido: ' + err.message)
+    toast.error('Error al realizar el pedido: ' + err.message)
   } finally {
     loading.value = false
   }
@@ -83,19 +85,46 @@ function updateQuantity(id, cantidad) {
   const item = cart.value.find(i => i._id === id)
   if (item) item.cantidad = cantidad
 }
+
+// Pregunta confirmación para eliminar un ítem
+function askRemoveItem(item) {
+  itemToDelete.value = item
+  showConfirm.value = true
+}
+
+// Confirma la eliminación del ítem
+function confirmRemove() {
+  removeFromCart(itemToDelete.value._id)
+  showConfirm.value = false
+  itemToDelete.value = null
+  toast.success('Producto eliminado del carrito')
+}
+
+// Cancela la eliminación del ítem
+function cancelRemove() {
+  showConfirm.value = false
+  itemToDelete.value = null
+}
 </script>
 
 <template>
-  <div
-    class="fixed top-20 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-4 
-           bg-white shadow-xl rounded-xl p-4 w-full max-w-xs sm:w-80 z-50
-           animate-fade-in-up transition-all duration-500 ease-out"
-  >
+  <div class="fixed top-20 left-1/2 -translate-x-1/2 sm:left-auto sm:translate-x-0 sm:right-8
+            bg-white shadow-2xl rounded-2xl p-6 w-full max-w-lg sm:w-[32rem] z-50
+            animate-fade-in-up transition-all duration-500 ease-out">
+    <!-- Modal de confirmación -->
+    <div v-if="showConfirm" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div class="bg-white rounded-xl shadow-lg p-6 w-80 max-w-full text-center">
+        <h4 class="text-lg font-bold mb-4 text-red-700">¿Seguro que deseas eliminar este producto?</h4>
+        <div class="flex justify-center gap-4 mt-2">
+          <button @click="confirmRemove" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Sí, eliminar</button>
+          <button @click="cancelRemove" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancelar</button>
+        </div>
+      </div>
+    </div>
+
     <!-- Botón cerrar carrito -->
-    <button
-      class="absolute top-2 right-2 text-gray-500 text-2xl hover:text-red-500 transition-colors"
-      @click="$emit('close')"
-    >
+    <button class="absolute top-2 right-2 text-gray-500 text-2xl hover:text-red-500 transition-colors"
+      @click="$emit('close')">
       &times;
     </button>
 
@@ -106,36 +135,14 @@ function updateQuantity(id, cantidad) {
 
     <!-- Lista de productos en carrito -->
     <ul v-else>
-      <li
-        v-for="item in cart"
-        :key="item._id"
-        class="flex items-center gap-3 mb-3 border-b pb-2 transition-transform duration-300 hover:scale-[1.02]"
-      >
-        <img
-          :src="item.imagen"
-          :alt="item.nombre"
-          class="w-14 h-14 object-cover rounded"
-        />
+      <li v-for="item in cart" :key="item._id"
+        class="flex items-center gap-3 mb-3 border-b pb-2 transition-transform duration-300 hover:scale-[1.02]">
+        <img :src="item.imagen" :alt="item.nombre" class="w-14 h-14 object-cover rounded" />
         <div class="flex-1">
           <div class="font-semibold text-black">{{ item.nombre }}</div>
-          <div class="text-black text-sm font-bold">{{ item.precio }}</div>
-          <div class="text-sm text-gray-500 flex items-center gap-1">
-            x
-            <input
-              type="number"
-              min="1"
-              :value="item.cantidad"
-              @input="updateQuantity(item._id, +$event.target.value)"
-              class="w-12 border rounded px-1 text-center transition focus:outline-none focus:ring-2 focus:ring-green-500"
-            />
-          </div>
+          <div class="text-gray-600 text-sm">${{ item.precio }} x {{ item.cantidad }}</div>
         </div>
-        <button
-          @click="removeFromCart(item._id)"
-          class="text-red-600 hover:underline text-xs transition-colors"
-        >
-          Quitar
-        </button>
+        <button @click="askRemoveItem(item)" class="text-red-600 hover:text-red-800 text-xl font-bold">&times;</button>
       </li>
     </ul>
 
@@ -145,23 +152,14 @@ function updateQuantity(id, cantidad) {
     </div>
 
     <!-- Botón Pedir -->
-    <button
-      v-if="cart.length"
-      @click="handleOrder"
-      :disabled="loading"
-      class="mt-2 bg-green-600 text-white px-3 py-1 rounded w-full
-             hover:bg-green-700 disabled:opacity-50 transition-colors"
-    >
+    <button v-if="cart.length" @click="handleOrder" :disabled="loading" class="mt-2 bg-green-600 text-white px-3 py-1 rounded w-full
+              hover:bg-green-700 disabled:opacity-50 transition-colors">
       {{ loading ? 'Enviando...' : 'Pedir' }}
     </button>
 
     <!-- Botón Vaciar carrito -->
-    <button
-      v-if="cart.length"
-      @click="clearCart"
-      class="mt-2 bg-red-600 text-white px-3 py-1 rounded w-full
-             hover:bg-red-700 transition-colors"
-    >
+    <button v-if="cart.length" @click="clearCart" class="mt-2 bg-red-600 text-white px-3 py-1 rounded w-full
+              hover:bg-red-700 transition-colors">
       Vaciar carrito
     </button>
   </div>
@@ -173,11 +171,13 @@ function updateQuantity(id, cantidad) {
     opacity: 0;
     transform: translateY(10px);
   }
+
   to {
     opacity: 1;
     transform: translateY(0);
   }
 }
+
 .animate-fade-in-up {
   animation: fade-in-up 0.4s ease-out;
 }

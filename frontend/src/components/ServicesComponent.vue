@@ -6,11 +6,8 @@ import { computed } from 'vue'
 import { useRouter } from 'vue-router'
 // Importación de imágenes para los íconos de los servicios
 import pizza from '@/components/img/pizza.png'
-import delivery from '@/components/img/delivery.png'
 import reservar from '@/components/img/reservar.png'
 import coctel from '@/components/img/coctel.png'
-import catering from '@/components/img/catering.png'
-import wifi from '@/components/img/wifi.png'
 
 // Array con la lista de servicios ofrecidos
 const services = [
@@ -49,27 +46,18 @@ function goToService(service) {
 </script>
 
 <template>
-  <!-- Sección con imagen de fondo y título -->
-  <section
-    class="relative bg-cover bg-center py-12 px-4 sm:py-16"
-    :style="{ backgroundImage: 'url(https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/a2/95/e0/disponible-para-reservas.jpg?w=900&h=500&s=1)' }"
-  >
-    <h2 class="text-center text-white text-2xl sm:text-3xl font-bold mb-10 sm:mb-12">Nuestros Servicios</h2>
+  <!-- Sección con fondo tipo login, sin imagen de fondo -->
+  <section class="relative bg-gradient-to-br from-red-100 via-gray-100 to-red-200 py-12 px-4 sm:py-28">
+    <h2 class="text-center text-red-900 text-2xl sm:text-3xl font-bold mb-10 sm:mb-12">Nuestros Servicios</h2>
 
     <!-- Grid responsivo para servicios -->
     <div class="max-w-7xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
-      <div
-        v-for="(service, index) in services"
-        :key="index"
+      <div v-for="(service, index) in services" :key="index"
         class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-4 sm:p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center cursor-pointer max-w-xs mx-auto"
-        @click="goToService(service)"
-      >
+        @click="goToService(service)">
         <!-- Imagen ajustada con tamaño más grande pero proporcional -->
-        <img
-          :src="service.icon"
-          :alt="service.title"
-          class="rounded-lg mb-4 w-28 h-28 sm:w-36 sm:h-36 object-contain shadow"
-        />
+        <img :src="service.icon" :alt="service.title"
+          class="rounded-lg mb-4 w-28 h-28 sm:w-36 sm:h-36 object-contain shadow" />
         <h3 class="font-bold text-xl sm:text-2xl mb-2 text-red-700">{{ service.title }}</h3>
         <p class="text-center text-sm sm:text-base">{{ service.description }}</p>
       </div>

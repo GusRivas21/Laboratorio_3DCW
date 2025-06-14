@@ -1,6 +1,7 @@
 <script setup>
 // --- IMPORTS Y REACTIVIDAD ---
 import { ref, onMounted, computed } from 'vue'
+import { useToast } from 'vue-toastification'
 
 // Simulación de datos de pedidos y reservaciones
 const pedidos = ref([])
@@ -22,34 +23,34 @@ const totalPaginasUsuarios = ref(1)
 
 // --- FUNCIONES PRINCIPALES ---
 const fetchPedidos = async () => {
-    loading.value = true
-    error.value = ''
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`)
-        if (!res.ok) throw new Error('Error al cargar los pedidos y reservaciones.')
-        pedidos.value = await res.json()
-        totalPaginas.value = Math.max(1, Math.ceil(pedidos.value.length / porPagina))
-        pagina.value = 1
-    } catch (err) {
-        error.value = 'Error al cargar los pedidos y reservaciones.'
-    } finally {
-        loading.value = false
-    }
+  loading.value = true
+  error.value = ''
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`)
+    if (!res.ok) throw new Error('Error al cargar los pedidos y reservaciones.')
+    pedidos.value = await res.json()
+    totalPaginas.value = Math.max(1, Math.ceil(pedidos.value.length / porPagina))
+    //pagina.value = 1
+  } catch (err) {
+    error.value = 'Error al cargar los pedidos y reservaciones.'
+  } finally {
+    loading.value = false
+  }
 }
 
 const fetchUsuarios = async () => {
-    loadingUsuarios.value = true
-    errorUsuarios.value = ''
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
-        if (!res.ok) throw new Error('Error al cargar los usuarios.')
-        usuarios.value = await res.json()
-        totalPaginasUsuarios.value = Math.max(1, Math.ceil(usuarios.value.length / porPaginaUsuarios))
-    } catch (err) {
-        errorUsuarios.value = 'Error al cargar los usuarios.'
-    } finally {
-        loadingUsuarios.value = false
-    }
+  loadingUsuarios.value = true
+  errorUsuarios.value = ''
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
+    if (!res.ok) throw new Error('Error al cargar los usuarios.')
+    usuarios.value = await res.json()
+    totalPaginasUsuarios.value = Math.max(1, Math.ceil(usuarios.value.length / porPaginaUsuarios))
+  } catch (err) {
+    errorUsuarios.value = 'Error al cargar los usuarios.'
+  } finally {
+    loadingUsuarios.value = false
+  }
 }
 
 // --- ESTADO Y FUNCIONES PARA EDICIÓN DE PEDIDOS ---
@@ -58,78 +59,99 @@ const pedidoForm = ref({ tipo: '', nombre: '', detalle: '', fecha: '', estado: '
 const pedidoError = ref('')
 
 const startEditPedido = (pedido) => {
-    pedidoEditando.value = pedido._id
-    pedidoForm.value = { tipo: pedido.tipo, nombre: pedido.nombre, detalle: pedido.detalle, fecha: pedido.fecha, estado: pedido.estado }
-    pedidoError.value = ''
+  pedidoEditando.value = pedido._id
+  pedidoForm.value = { tipo: pedido.tipo, nombre: pedido.nombre, detalle: pedido.detalle, fecha: pedido.fecha, estado: pedido.estado }
+  pedidoError.value = ''
 }
 
 const cancelarEditPedido = () => {
-    pedidoEditando.value = null
-    pedidoForm.value = { tipo: '', nombre: '', detalle: '', fecha: '', estado: '' }
-    pedidoError.value = ''
+  pedidoEditando.value = null
+  pedidoForm.value = { tipo: '', nombre: '', detalle: '', fecha: '', estado: '' }
+  pedidoError.value = ''
 }
 
 const guardarEditPedido = async (id) => {
-    pedidoError.value = ''
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, {
-            method: 'PUT',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(pedidoForm.value)
-        })
-        if (!res.ok) throw new Error('Error al editar pedido')
-        await fetchPedidos()
-        cancelarEditPedido()
-    } catch (err) {
-        pedidoError.value = err.message
-    }
+  pedidoError.value = ''
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, {
+      method: 'PUT',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(pedidoForm.value)
+    })
+    if (!res.ok) throw new Error('Error al editar pedido')
+    await fetchPedidos()
+    cancelarEditPedido()
+  } catch (err) {
+    pedidoError.value = err.message
+  }
+}
+
+const toast = useToast()
+
+// --- MODAL DE CONFIRMACIÓN PARA ELIMINAR PEDIDO ---
+const showConfirmPedido = ref(false)
+const pedidoToDelete = ref(null)
+
+function askRemovePedido(pedido) {
+  pedidoToDelete.value = pedido
+  showConfirmPedido.value = true
+}
+function confirmRemovePedido() {
+  eliminarPedido(pedidoToDelete.value._id)
+  showConfirmPedido.value = false
+  pedidoToDelete.value = null
+}
+function cancelRemovePedido() {
+  showConfirmPedido.value = false
+  pedidoToDelete.value = null
 }
 
 const eliminarPedido = async (id) => {
-    if (!confirm('¿Seguro que deseas eliminar este pedido?')) return
-    try {
-        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, { method: 'DELETE' })
-        if (!res.ok) throw new Error('Error al eliminar pedido')
-        await fetchPedidos()
-    } catch (err) {
-        alert('Error al eliminar pedido')
-    }
+  try {
+    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, { method: 'DELETE' })
+    if (!res.ok) throw new Error('Error al eliminar pedido')
+    await fetchPedidos()
+    toast.success('Pedido eliminado correctamente')
+  } catch (err) {
+    toast.error('Error al eliminar pedido')
+  }
 }
 
 // --- PAGINACIÓN: FUNCIONES Y DATOS ---
 const pedidosPagina = () => {
-    const start = (pagina.value - 1) * porPagina
-    return pedidos.value.slice(start, start + porPagina)
+  const start = (pagina.value - 1) * porPagina
+  return pedidos.value.slice(start, start + porPagina)
 }
 // CAMBIA usuariosPagina a una propiedad computada:
 const usuariosPagina = computed(() => {
-    const start = (paginaUsuarios.value - 1) * porPaginaUsuarios
-    return usuarios.value.slice(start, start + porPaginaUsuarios)
+  const start = (paginaUsuarios.value - 1) * porPaginaUsuarios
+  return usuarios.value.slice(start, start + porPaginaUsuarios)
 })
 
 // --- CICLO DE VIDA ---
 onMounted(() => {
-    fetchPedidos()
-    fetchUsuarios()
+  fetchPedidos()
+  fetchUsuarios()
 })
 </script>
 
 <template>
-  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row pt-24">
+  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row">
     <!-- Barra lateral -->
     <aside
-      class="w-full md:w-64 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black border-b-2 md:border-b-0 md:border-r-2 border-black z-20"
-    >
+      class="w-full md:w-64 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black border-b-2 md:border-b-0 md:border-r-2 border-black z-20 md:pt-30">
       <nav class="flex-1 flex flex-row md:flex-col gap-2 md:gap-4 justify-center md:justify-start w-full">
-        <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition" :class="{ 'bg-red-700': $route.path === '/admin' }">Pedidos y Reservas</router-link>
-        <router-link to="/admin/usuarios" class="py-2 px-4 rounded hover:bg-red-700 transition" :class="{ 'bg-red-700': $route.path === '/admin/usuarios' }">Usuarios</router-link>
+        <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition"
+          :class="{ 'bg-red-700': $route.path === '/admin' }">Pedidos y Reservas</router-link>
+        <router-link to="/admin/usuarios" class="py-2 px-4 rounded hover:bg-red-700 transition"
+          :class="{ 'bg-red-700': $route.path === '/admin/usuarios' }">Usuarios</router-link>
       </nav>
     </aside>
     <!-- Contenido principal -->
-    <main class="flex-1 p-2 md:p-8">
+    <main class="flex-1 p-2 md:p-8  ">
       <!-- Pedidos y Reservas -->
       <template v-if="$route.path === '/admin'">
-        <h2 class="text-3xl font-bold text-red-900 mb-6">Pedidos y Reservas</h2>
+        <h2 class="text-3xl font-bold text-red-900 mb-6 pt-23">Pedidos y Reservas</h2>
         <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
           <div v-if="loading" class="text-gray-500">Cargando...</div>
           <div v-else-if="error" class="text-red-600">{{ error }}</div>
@@ -172,8 +194,10 @@ onMounted(() => {
                       </select>
                     </td>
                     <td class="py-2 px-3 flex gap-2">
-                      <button @click="guardarEditPedido(item._id)" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Guardar</button>
-                      <button @click="cancelarEditPedido" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Cancelar</button>
+                      <button @click="guardarEditPedido(item._id)"
+                        class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Guardar</button>
+                      <button @click="cancelarEditPedido"
+                        class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Cancelar</button>
                     </td>
                   </template>
                   <template v-else>
@@ -183,8 +207,10 @@ onMounted(() => {
                     <td class="py-2 px-3">{{ item.fecha }}</td>
                     <td class="py-2 px-3">{{ item.estado }}</td>
                     <td class="py-2 px-3 flex gap-2">
-                      <button @click="startEditPedido(item)" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
-                      <button @click="eliminarPedido(item._id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Eliminar</button>
+                      <button @click="startEditPedido(item)"
+                        class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
+                      <button @click="askRemovePedido(item)"
+                        class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Eliminar</button>
                     </td>
                   </template>
                 </tr>
@@ -193,17 +219,11 @@ onMounted(() => {
           </div>
           <!-- Paginación Pedidos -->
           <div v-if="totalPaginas > 1" class="flex justify-center mt-8 gap-2">
-            <button
-              :disabled="pagina === 1"
-              @click="pagina--"
-              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-            >Anterior</button>
+            <button :disabled="pagina === 1" @click="pagina--"
+              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">Anterior</button>
             <span class="px-4 py-1 font-bold">{{ pagina }} / {{ totalPaginas }}</span>
-            <button
-              :disabled="pagina === totalPaginas"
-              @click="pagina++"
-              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-            >Siguiente</button>
+            <button :disabled="pagina === totalPaginas" @click="pagina++"
+              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">Siguiente</button>
           </div>
           <div v-if="pedidoError" class="text-red-600 mt-2">{{ pedidoError }}</div>
         </div>
@@ -240,28 +260,34 @@ onMounted(() => {
             </div>
             <!-- Paginación Usuarios -->
             <div v-if="totalPaginasUsuarios > 1" class="flex justify-center mt-8 gap-2">
-              <button
-                :disabled="paginaUsuarios === 1"
-                @click="paginaUsuarios--"
-                class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-              >
+              <button :disabled="paginaUsuarios === 1" @click="paginaUsuarios--"
+                class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">
                 Anterior
               </button>
               <span>Página {{ paginaUsuarios }} de {{ totalPaginasUsuarios }}</span>
-              <button
-                :disabled="paginaUsuarios === totalPaginasUsuarios"
-                @click="paginaUsuarios++"
-                class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
-              >
+              <button :disabled="paginaUsuarios === totalPaginasUsuarios" @click="paginaUsuarios++"
+                class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50">
                 Siguiente
               </button>
             </div>
             <p class="text-xs text-gray-500">
-              Total usuarios: {{ usuarios.length }} | Página actual: {{ paginaUsuarios }} | Total páginas: {{ totalPaginasUsuarios }}
+              Total usuarios: {{ usuarios.length }} | Página actual: {{ paginaUsuarios }} | Total páginas: {{
+              totalPaginasUsuarios }}
             </p>
           </div>
         </div>
       </template>
     </main>
+
+    <!-- Modal de confirmación para eliminar pedido -->
+    <div v-if="showConfirmPedido" class="fixed inset-0 bg-black/40 flex items-center justify-center z-50">
+      <div class="bg-white rounded-xl shadow-lg p-6 w-80 max-w-full text-center">
+        <h4 class="text-lg font-bold mb-4 text-red-700">¿Seguro que deseas eliminar este pedido?</h4>
+        <div class="flex justify-center gap-4 mt-2">
+          <button @click="confirmRemovePedido" class="bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700">Sí, eliminar</button>
+          <button @click="cancelRemovePedido" class="bg-gray-300 text-gray-800 px-4 py-2 rounded hover:bg-gray-400">Cancelar</button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>

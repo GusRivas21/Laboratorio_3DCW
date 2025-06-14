@@ -75,7 +75,8 @@ const register = async () => {
 </script>
 
 <template>
-  <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 px-2">
+  <div
+    class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 px-2">
     <div class="bg-white/90 p-8 rounded-2xl shadow-2xl w-full max-w-sm">
       <h2 class="text-2xl text-center text-black mb-6 drop-shadow">Registro de Usuario</h2>
 
@@ -83,42 +84,31 @@ const register = async () => {
 
         <!-- Nombre -->
         <div class="relative">
-          <input
-            v-model="name"
-            type="text"
-            placeholder="Nombre"
+          <input v-model="name" type="text" placeholder="Nombre"
             class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
-            :class="{ 'border-red-500': nameError }"
-          />
+            :class="{ 'border-red-500': nameError }" />
           <p v-if="nameError" class="text-red-600 text-sm mt-1">{{ nameError }}</p>
         </div>
 
         <!-- Correo -->
         <div class="relative">
-          <input
-            v-model="email"
-            type="email"
-            placeholder="Correo"
+          <input v-model="email" type="email" placeholder="Correo"
             class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
-            :class="{ 'border-red-500': emailError }"
-          />
+            :class="{ 'border-red-500': emailError }" />
           <p v-if="emailError" class="text-red-600 text-sm mt-1">{{ emailError }}</p>
         </div>
 
         <!-- Contraseña -->
         <div class="relative">
-          <input
-            v-model="password"
-            type="password"
-            placeholder="Contraseña"
+          <input v-model="password" type="password" placeholder="Contraseña"
             class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
-            :class="{ 'border-red-500': passwordError }"
-          />
+            :class="{ 'border-red-500': passwordError }" />
           <p v-if="passwordError" class="text-red-600 text-sm mt-1">{{ passwordError }}</p>
         </div>
 
         <!-- Botón -->
-        <button type="submit" class="w-full bg-red-700 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition">
+        <button type="submit"
+          class="w-full bg-red-700 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition">
           Registrarse
         </button>
 
