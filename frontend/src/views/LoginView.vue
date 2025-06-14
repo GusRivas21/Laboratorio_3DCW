@@ -65,35 +65,48 @@ const login = async () => {
 </script>
 
 <template>
-    <div class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 px-2">
-        <div class="bg-white/90 p-8 rounded-2xl shadow-2xl w-full max-w-sm">
-        <h2 class="text-2xl  text-center text-black mb-6 drop-shadow">Iniciar Sesión</h2>
-        <form @submit.prevent="login" class="flex flex-col gap-4">
-            <input
-            v-model="email"
-            type="email"
-            placeholder="Correo"
-            class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
-            required
-            />
-            <input
-            v-model="password"
-            type="password"
-            placeholder="Contraseña"
-            class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
-            required
-            />
-            <button
-            type="submit"
-            class="w-full bg-red-700 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition"
-            >
-            Entrar
-            </button>
-            <p v-if="error" class="text-center text-red-600 font-medium mt-2">{{ error }}</p>
-        </form>
-            <div class="mt-4 text-center">
-                <router-link to="/register" class="text-red-700 hover:underline">¿No tienes cuenta? Regístrate</router-link>
-            </div>
-        </div>
+  <div
+    class="flex flex-col items-center justify-center min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 px-4"
+  >
+    <div
+      class="bg-white/90 p-8 rounded-2xl shadow-2xl w-full max-w-sm
+             sm:max-w-md md:max-w-md"
+    >
+      <h2 class="text-2xl text-center text-black mb-6 drop-shadow">
+        Iniciar Sesión
+      </h2>
+      <form @submit.prevent="login" class="flex flex-col gap-4">
+        <input
+          v-model="email"
+          type="email"
+          placeholder="Correo"
+          class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
+          required
+        />
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Contraseña"
+          class="w-full p-3 border border-gray-300 rounded focus:ring-2 focus:ring-red-400 outline-none transition"
+          required
+        />
+        <button
+          type="submit"
+          class="w-full bg-red-700 text-white font-bold py-2 rounded-lg hover:bg-red-500 transition"
+        >
+          Entrar
+        </button>
+        <p v-if="error" class="text-center text-red-600 font-medium mt-2">
+          {{ error }}
+        </p>
+      </form>
+      <div class="mt-4 text-center">
+        <router-link
+          to="/register"
+          class="text-red-700 hover:underline"
+          >¿No tienes cuenta? Regístrate</router-link
+        >
+      </div>
     </div>
+  </div>
 </template>

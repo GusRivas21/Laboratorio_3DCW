@@ -34,7 +34,7 @@ const services = [
   },
 ]
 
-//Una ropiedad computada que devuelve la cantidad total de servicios disponibles
+//Una propiedad computada que devuelve la cantidad total de servicios disponibles
 const totalServices = computed(() => services.length)
 
 const router = useRouter()
@@ -48,26 +48,34 @@ function goToService(service) {
 }
 </script>
 
-
 <template>
-  <section class="relative bg-cover bg-center py-16 px-4" :style="{ backgroundImage: 'url(https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/a2/95/e0/disponible-para-reservas.jpg?w=900&h=500&s=1)' }">
-    <h2 class="text-center text-white text-3xl font-bold mb-12">Nuestros Servicios</h2>
-    <div class="max-w-7xl mx-auto grid gap-10 md:grid-cols-3">
+  <!-- Sección con imagen de fondo y título -->
+  <section
+    class="relative bg-cover bg-center py-12 px-4 sm:py-16"
+    :style="{ backgroundImage: 'url(https://dynamic-media-cdn.tripadvisor.com/media/photo-o/2d/a2/95/e0/disponible-para-reservas.jpg?w=900&h=500&s=1)' }"
+  >
+    <h2 class="text-center text-white text-2xl sm:text-3xl font-bold mb-10 sm:mb-12">Nuestros Servicios</h2>
+
+    <!-- Grid responsivo para servicios -->
+    <div class="max-w-7xl mx-auto grid gap-8 sm:grid-cols-2 md:grid-cols-3">
       <div
         v-for="(service, index) in services"
         :key="index"
-        class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center cursor-pointer"
+        class="bg-white/90 text-gray-900 rounded-2xl shadow-xl p-4 sm:p-6 hover:scale-105 hover:shadow-2xl transition-all duration-300 flex flex-col items-center cursor-pointer max-w-xs mx-auto"
         @click="goToService(service)"
       >
         <!-- Imagen ajustada con tamaño más grande pero proporcional -->
-        <img :src="service.icon" :alt="service.title" class="rounded-lg mb-4 w-36 h-36 object-contain shadow" />
-        <h3 class="font-bold text-2xl mb-2 text-red-700">{{ service.title }}</h3>
-        <p class="mb-2 text-center">{{ service.description }}</p>
+        <img
+          :src="service.icon"
+          :alt="service.title"
+          class="rounded-lg mb-4 w-28 h-28 sm:w-36 sm:h-36 object-contain shadow"
+        />
+        <h3 class="font-bold text-xl sm:text-2xl mb-2 text-red-700">{{ service.title }}</h3>
+        <p class="text-center text-sm sm:text-base">{{ service.description }}</p>
       </div>
     </div>
   </section>
 </template>
-
 
 <style scoped>
 .navbar {

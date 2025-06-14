@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, computed } from 'vue'
 
 const usuarios = ref([])
 const loading = ref(true)
@@ -8,6 +8,15 @@ const usuarioEditando = ref(null)
 const usuarioForm = ref({ name: '', email: '', role: '' })
 const usuarioError = ref('')
 
+// Paginación
+const currentPage = ref(1)
+const pageSize = 10
+const totalPages = computed(() => Math.ceil(usuarios.value.length / pageSize))
+const paginatedUsuarios = computed(() => {
+  const start = (currentPage.value - 1) * pageSize
+  return usuarios.value.slice(start, start + pageSize)
+})
+
 const fetchUsuarios = async () => {
     loading.value = true
     error.value = ''
@@ -15,6 +24,8 @@ const fetchUsuarios = async () => {
         const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
         if (!res.ok) throw new Error('Error al cargar los usuarios.')
         usuarios.value = await res.json()
+        // Reinicia a la primera página si cambia la cantidad de usuarios
+        currentPage.value = 1
     } catch (err) {
         error.value = 'Error al cargar los usuarios.'
     } finally {
@@ -70,15 +81,27 @@ const eliminarUser = async (id) => {
   <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row pt-24">
     <!-- Barra lateral: lateral en desktop, barra horizontal bajo el navbar en móvil -->
     <aside
-      class="w-full md:w-56 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black border-b-2 md:border-b-0 md:border-r-2 border-black z-20"
+      class="w-full md:w-56 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen
+             bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black
+             border-b-2 md:border-b-0 md:border-r-2 border-black z-20 overflow-x-auto"
     >
       <nav class="flex-1 flex flex-row md:flex-col gap-2 md:gap-4 justify-center md:justify-start w-full">
-        <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition">Pedidos y Reservas</router-link>
-        <router-link to="/admin/usuarios" class="py-2 px-4 rounded hover:bg-red-700 transition bg-red-700">Usuarios</router-link>
+        <router-link
+          to="/admin"
+          class="py-2 px-4 rounded hover:bg-red-700 transition whitespace-nowrap"
+        >
+          Pedidos y Reservas
+        </router-link>
+        <router-link
+          to="/admin/usuarios"
+          class="py-2 px-4 rounded hover:bg-red-700 transition bg-red-700 whitespace-nowrap"
+        >
+          Usuarios
+        </router-link>
       </nav>
     </aside>
     <!-- Contenido principal -->
-    <main class="flex-1 p-2 md:p-8">
+    <main class="flex-1 p-2 md:p-8 overflow-x-auto">
       <h2 class="text-3xl font-bold text-red-900 mb-6">Usuarios Registrados</h2>
       <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
         <div v-if="loading" class="text-gray-500">Cargando...</div>
@@ -95,7 +118,7 @@ const eliminarUser = async (id) => {
               </tr>
             </thead>
             <tbody>
-              <tr v-for="user in usuarios" :key="user._id" class="border-b hover:bg-red-50">
+              <tr v-for="user in paginatedUsuarios" :key="user._id" class="border-b hover:bg-red-50">
                 <template v-if="usuarioEditando === user._id">
                   <td class="py-2 px-3">
                     <input v-model="usuarioForm.name" class="border rounded px-2 py-1 w-full" />
@@ -109,23 +132,49 @@ const eliminarUser = async (id) => {
                       <option value="cliente">cliente</option>
                     </select>
                   </td>
-                  <td class="py-2 px-3 flex gap-2">
-                    <button @click="guardarEditUser(user._id)" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Guardar</button>
-                    <button @click="cancelarEditUser" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Cancelar</button>
+                  <td class="py-2 px-3 flex gap-2 flex-wrap">
+                    <button @click="guardarEditUser(user._id)" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">
+                      Guardar
+                    </button>
+                    <button @click="cancelarEditUser" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">
+                      Cancelar
+                    </button>
                   </td>
                 </template>
                 <template v-else>
                   <td class="py-2 px-3 font-semibold">{{ user.name }}</td>
-                  <td class="py-2 px-3">{{ user.email }}</td>
+                  <td class="py-2 px-3 break-all">{{ user.email }}</td>
                   <td class="py-2 px-3 capitalize">{{ user.role }}</td>
-                  <td class="py-2 px-3 flex gap-2">
-                    <button @click="startEditUser(user)" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
-                    <button @click="eliminarUser(user._id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Eliminar</button>
+                  <td class="py-2 px-3 flex gap-2 flex-wrap">
+                    <button @click="startEditUser(user)" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">
+                      Editar
+                    </button>
+                    <button @click="eliminarUser(user._id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">
+                      Eliminar
+                    </button>
                   </td>
                 </template>
               </tr>
             </tbody>
           </table>
+        </div>
+        <!-- Controles de paginación -->
+        <div class="flex justify-center items-center gap-2 mt-4" v-if="totalPages > 1">
+          <button
+            class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+            :disabled="currentPage === 1"
+            @click="currentPage--"
+          >
+            Anterior
+          </button>
+          <span>Página {{ currentPage }} de {{ totalPages }}</span>
+          <button
+            class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300"
+            :disabled="currentPage === totalPages"
+            @click="currentPage++"
+          >
+            Siguiente
+          </button>
         </div>
         <div v-if="usuarioError" class="text-red-600 mt-2">{{ usuarioError }}</div>
       </div>

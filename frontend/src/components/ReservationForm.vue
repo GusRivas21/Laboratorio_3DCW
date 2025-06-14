@@ -1,150 +1,274 @@
 <script setup>
-import { ref } from 'vue'
+// --- IMPORTS Y REACTIVIDAD ---
+import { ref, onMounted, computed } from 'vue'
 
-const showForm = ref(true) // Ahora siempre está visible
-const name = ref('')
-const email = ref('')
-const date = ref('')
-const time = ref('')
-const guests = ref(1)
-const successMessage = ref('')
-const errorMessage = ref('')
+// Simulación de datos de pedidos y reservaciones
+const pedidos = ref([])
+const loading = ref(true)
+const error = ref('')
 
-const submitReservation = async () => {
-  successMessage.value = ''
-  errorMessage.value = ''
+// --- PAGINACIÓN PEDIDOS ---
+const pagina = ref(1)
+const porPagina = 5
+const totalPaginas = ref(1)
 
-  if (!name.value.trim()) {
-    errorMessage.value = 'El nombre no puede estar vacío.'
-    return
-  }
-  const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
-  if (!emailRegex.test(email.value)) {
-    errorMessage.value = 'El correo debe ser válido.'
-    return
-  }
-  if (!date.value || !time.value) {
-    errorMessage.value = 'La fecha y hora son obligatorias.'
-    return
-  }
-  if (guests.value < 1) {
-    errorMessage.value = 'Debe haber al menos 1 invitado.'
-    return
-  }
+// --- USUARIOS ---
+const usuarios = ref([])
+const loadingUsuarios = ref(true)
+const errorUsuarios = ref('')
+const paginaUsuarios = ref(1)
+const porPaginaUsuarios = 5
+const totalPaginasUsuarios = ref(1)
 
-  try {
-    const res = await fetch(`${import.meta.env.VITE_API_URL}/api/reservations`, {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({
-        name: name.value,
-        email: email.value,
-        date: date.value,
-        time: time.value,
-        guests: guests.value,
-      }),
-    })
-    if (!res.ok) throw new Error('Error al enviar la reservación.')
-
-    successMessage.value = 'Reservación enviada exitosamente.'
-
-    name.value = ''
-    email.value = ''
-    date.value = ''
-    time.value = ''
-    guests.value = 1
-    showForm.value = false
-
-    setTimeout(() => {
-      successMessage.value = ''
-    }, 3000)
-  } catch (err) {
-    errorMessage.value = err.message
-  }
+// --- FUNCIONES PRINCIPALES ---
+const fetchPedidos = async () => {
+    loading.value = true
+    error.value = ''
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders`)
+        if (!res.ok) throw new Error('Error al cargar los pedidos y reservaciones.')
+        pedidos.value = await res.json()
+        totalPaginas.value = Math.max(1, Math.ceil(pedidos.value.length / porPagina))
+        pagina.value = 1
+    } catch (err) {
+        error.value = 'Error al cargar los pedidos y reservaciones.'
+    } finally {
+        loading.value = false
+    }
 }
+
+const fetchUsuarios = async () => {
+    loadingUsuarios.value = true
+    errorUsuarios.value = ''
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/users`)
+        if (!res.ok) throw new Error('Error al cargar los usuarios.')
+        usuarios.value = await res.json()
+        totalPaginasUsuarios.value = Math.max(1, Math.ceil(usuarios.value.length / porPaginaUsuarios))
+    } catch (err) {
+        errorUsuarios.value = 'Error al cargar los usuarios.'
+    } finally {
+        loadingUsuarios.value = false
+    }
+}
+
+// --- ESTADO Y FUNCIONES PARA EDICIÓN DE PEDIDOS ---
+const pedidoEditando = ref(null)
+const pedidoForm = ref({ tipo: '', nombre: '', detalle: '', fecha: '', estado: '' })
+const pedidoError = ref('')
+
+const startEditPedido = (pedido) => {
+    pedidoEditando.value = pedido._id
+    pedidoForm.value = { tipo: pedido.tipo, nombre: pedido.nombre, detalle: pedido.detalle, fecha: pedido.fecha, estado: pedido.estado }
+    pedidoError.value = ''
+}
+
+const cancelarEditPedido = () => {
+    pedidoEditando.value = null
+    pedidoForm.value = { tipo: '', nombre: '', detalle: '', fecha: '', estado: '' }
+    pedidoError.value = ''
+}
+
+const guardarEditPedido = async (id) => {
+    pedidoError.value = ''
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, {
+            method: 'PUT',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(pedidoForm.value)
+        })
+        if (!res.ok) throw new Error('Error al editar pedido')
+        await fetchPedidos()
+        cancelarEditPedido()
+    } catch (err) {
+        pedidoError.value = err.message
+    }
+}
+
+const eliminarPedido = async (id) => {
+    if (!confirm('¿Seguro que deseas eliminar este pedido?')) return
+    try {
+        const res = await fetch(`${import.meta.env.VITE_API_URL}/api/orders/${id}`, { method: 'DELETE' })
+        if (!res.ok) throw new Error('Error al eliminar pedido')
+        await fetchPedidos()
+    } catch (err) {
+        alert('Error al eliminar pedido')
+    }
+}
+
+// --- PAGINACIÓN: FUNCIONES Y DATOS ---
+const pedidosPagina = () => {
+    const start = (pagina.value - 1) * porPagina
+    return pedidos.value.slice(start, start + porPagina)
+}
+// CAMBIA usuariosPagina a una propiedad computada:
+const usuariosPagina = computed(() => {
+    const start = (paginaUsuarios.value - 1) * porPaginaUsuarios
+    return usuarios.value.slice(start, start + porPaginaUsuarios)
+})
+
+// --- CICLO DE VIDA ---
+onMounted(() => {
+    fetchPedidos()
+    fetchUsuarios()
+})
 </script>
 
 <template>
-  <div>
-    <!-- Notificación flotante de éxito -->
-    <div
-      v-if="successMessage"
-      class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition-opacity duration-300"
+  <div class="min-h-screen bg-gradient-to-br from-red-100 via-gray-100 to-red-200 flex flex-col md:flex-row pt-24">
+    <!-- Barra lateral -->
+    <aside
+      class="w-full md:w-64 md:max-w-xs text-white flex flex-row md:flex-col py-2 md:py-8 px-2 md:px-4 shadow-lg min-h-[56px] md:min-h-screen bg-gradient-to-r from-black via-red-900 to-black md:bg-gradient-to-b md:from-black md:via-red-900 md:to-black border-b-2 md:border-b-0 md:border-r-2 border-black z-20"
     >
-      {{ successMessage }}
-    </div>
+      <nav class="flex-1 flex flex-row md:flex-col gap-2 md:gap-4 justify-center md:justify-start w-full">
+        <router-link to="/admin" class="py-2 px-4 rounded hover:bg-red-700 transition" :class="{ 'bg-red-700': $route.path === '/admin' }">Pedidos y Reservas</router-link>
+        <router-link to="/admin/usuarios" class="py-2 px-4 rounded hover:bg-red-700 transition" :class="{ 'bg-red-700': $route.path === '/admin/usuarios' }">Usuarios</router-link>
+      </nav>
+    </aside>
+    <!-- Contenido principal -->
+    <main class="flex-1 p-2 md:p-8">
+      <!-- Pedidos y Reservas -->
+      <template v-if="$route.path === '/admin'">
+        <h2 class="text-3xl font-bold text-red-900 mb-6">Pedidos y Reservas</h2>
+        <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
+          <div v-if="loading" class="text-gray-500">Cargando...</div>
+          <div v-else-if="error" class="text-red-600">{{ error }}</div>
+          <!-- Tabla responsiva con scroll horizontal -->
+          <div class="w-full overflow-x-auto">
+            <table class="w-full min-w-[700px] text-left border-collapse text-xs sm:text-sm">
+              <thead>
+                <tr class="bg-red-100">
+                  <th class="py-2 px-3 whitespace-nowrap">Tipo</th>
+                  <th class="py-2 px-3 whitespace-nowrap">Nombre</th>
+                  <!-- Ocultar columna detalle en pantallas xs -->
+                  <th class="py-2 px-3 whitespace-nowrap hidden sm:table-cell">Detalle</th>
+                  <th class="py-2 px-3 whitespace-nowrap">Fecha</th>
+                  <th class="py-2 px-3 whitespace-nowrap">Estado</th>
+                  <th class="py-2 px-3 whitespace-nowrap">Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="item in pedidosPagina()" :key="item._id" class="border-b hover:bg-red-50">
+                  <template v-if="pedidoEditando === item._id">
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <select v-model="pedidoForm.tipo" class="border rounded px-2 py-1 w-full">
+                        <option value="Pedido">Pedido</option>
+                        <option value="Reserva">Reserva</option>
+                      </select>
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <input v-model="pedidoForm.nombre" class="border rounded px-2 py-1 w-full" />
+                    </td>
+                    <!-- Ocultar input detalle en pantallas xs -->
+                    <td class="py-2 px-3 whitespace-nowrap hidden sm:table-cell">
+                      <input v-model="pedidoForm.detalle" class="border rounded px-2 py-1 w-full" />
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <input v-model="pedidoForm.fecha" class="border rounded px-2 py-1 w-full" />
+                    </td>
+                    <td class="py-2 px-3 whitespace-nowrap">
+                      <select v-model="pedidoForm.estado" class="border rounded px-2 py-1 w-full">
+                        <option value="Pendiente">Pendiente</option>
+                        <option value="Completado">Completado</option>
+                        <option value="Cancelado">Cancelado</option>
+                      </select>
+                    </td>
+                    <td class="py-2 px-3 flex gap-2 whitespace-nowrap">
+                      <button @click="guardarEditPedido(item._id)" class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Guardar</button>
+                      <button @click="cancelarEditPedido" class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Cancelar</button>
+                    </td>
+                  </template>
+                  <template v-else>
+                    <td class="py-2 px-3 font-semibold whitespace-nowrap">{{ item.tipo }}</td>
+                    <td class="py-2 px-3 whitespace-nowrap">{{ item.nombre }}</td>
+                    <!-- Ocultar detalle en pantallas xs -->
+                    <td class="py-2 px-3 hidden sm:table-cell">{{ item.detalle }}</td>
+                    <td class="py-2 px-3 whitespace-nowrap">{{ item.fecha }}</td>
+                    <td class="py-2 px-3 whitespace-nowrap">{{ item.estado }}</td>
+                    <td class="py-2 px-3 flex gap-2 whitespace-nowrap">
+                      <button @click="startEditPedido(item)" class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
+                      <button @click="eliminarPedido(item._id)" class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Eliminar</button>
+                    </td>
+                  </template>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+          <!-- Paginación Pedidos -->
+          <div v-if="totalPaginas > 1" class="flex justify-center mt-8 gap-2">
+            <button
+              :disabled="pagina === 1"
+              @click="pagina--"
+              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            >Anterior</button>
+            <span class="px-4 py-1 font-bold">{{ pagina }} / {{ totalPaginas }}</span>
+            <button
+              :disabled="pagina === totalPaginas"
+              @click="pagina++"
+              class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+            >Siguiente</button>
+          </div>
+          <div v-if="pedidoError" class="text-red-600 mt-2">{{ pedidoError }}</div>
+        </div>
+      </template>
 
-    <!-- Formulario de reservaciones -->
-    <div
-      v-if="showForm"
-      class="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-40"
-    >
-      <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
-        <h2 class="text-2xl font-bold text-center text-gray-800 mb-4">Reservaciones</h2>
-        <form @submit.prevent="submitReservation" class="flex flex-col gap-4">
-          <div>
-            <label for="name" class="block text-gray-700 font-medium mb-1">Nombre</label>
-            <input
-              v-model="name"
-              type="text"
-              id="name"
-              placeholder="Tu nombre"
-              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-400 outline-none"
-            />
+      <!-- Usuarios registrados SOLO si ruta es /admin/usuarios -->
+      <template v-if="$route.path === '/admin/usuarios'">
+        <h2 class="text-3xl font-bold text-red-900 mb-6">Usuarios Registrados</h2>
+        <div class="bg-white rounded-xl shadow-lg p-2 md:p-6 min-h-[300px]">
+          <div v-if="loadingUsuarios" class="text-gray-500">Cargando...</div>
+          <div v-else-if="errorUsuarios" class="text-red-600">{{ errorUsuarios }}</div>
+          <div v-else>
+            <!-- Tabla responsiva con scroll horizontal -->
+            <div class="w-full overflow-x-auto">
+              <table class="w-full min-w-[700px] text-left border-collapse text-xs sm:text-sm">
+                <thead>
+                  <tr class="bg-red-100">
+                    <th class="py-2 px-3 whitespace-nowrap">Nombre</th>
+                    <th class="py-2 px-3 whitespace-nowrap">Correo</th>
+                    <!-- Ocultar columna rol en pantallas xs -->
+                    <th class="py-2 px-3 whitespace-nowrap hidden sm:table-cell">Rol</th>
+                    <th class="py-2 px-3 whitespace-nowrap">Acciones</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr v-for="usuario in usuariosPagina.value" :key="usuario._id" class="border-b hover:bg-red-50">
+                    <td class="py-2 px-3 whitespace-nowrap">{{ usuario.name }}</td>
+                    <td class="py-2 px-3 whitespace-nowrap">{{ usuario.email }}</td>
+                    <!-- Ocultar rol en pantallas xs -->
+                    <td class="py-2 px-3 hidden sm:table-cell">{{ usuario.role }}</td>
+                    <td class="py-2 px-3 flex gap-2 whitespace-nowrap">
+                      <button class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
+                      <button class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Eliminar</button>
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+            <!-- Paginación Usuarios -->
+            <div v-if="totalPaginasUsuarios > 1" class="flex justify-center mt-8 gap-2">
+              <button
+                :disabled="paginaUsuarios === 1"
+                @click="paginaUsuarios--"
+                class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              >
+                Anterior
+              </button>
+              <span>Página {{ paginaUsuarios }} de {{ totalPaginasUsuarios }}</span>
+              <button
+                :disabled="paginaUsuarios === totalPaginasUsuarios"
+                @click="paginaUsuarios++"
+                class="px-3 py-1 rounded bg-gray-200 hover:bg-gray-300 disabled:opacity-50"
+              >
+                Siguiente
+              </button>
+            </div>
+            <p class="text-xs text-gray-500">
+              Total usuarios: {{ usuarios.length }} | Página actual: {{ paginaUsuarios }} | Total páginas: {{ totalPaginasUsuarios }}
+            </p>
           </div>
-          <div>
-            <label for="email" class="block text-gray-700 font-medium mb-1">Correo</label>
-            <input
-              v-model="email"
-              type="email"
-              id="email"
-              placeholder="Tu correo"
-              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-400 outline-none"
-            />
-          </div>
-          <div>
-            <label for="date" class="block text-gray-700 font-medium mb-1">Fecha</label>
-            <input
-              v-model="date"
-              type="date"
-              id="date"
-              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-400 outline-none"
-            />
-          </div>
-          <div>
-            <label for="time" class="block text-gray-700 font-medium mb-1">Hora</label>
-            <input
-              v-model="time"
-              type="time"
-              id="time"
-              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-400 outline-none"
-            />
-          </div>
-          <div>
-            <label for="guests" class="block text-gray-700 font-medium mb-1">Número de personas</label>
-            <input
-              v-model="guests"
-              type="number"
-              id="guests"
-              min="1"
-              class="w-full p-2 border border-gray-300 rounded focus:ring-2 focus:ring-gray-400 outline-none"
-            />
-          </div>
-          <button
-            type="submit"
-            class="w-full bg-gray-800 text-white font-bold py-2 rounded hover:bg-gray-700 transition"
-          >
-            Reservar
-          </button>
-          <p v-if="errorMessage" class="text-red-600 text-center mt-2">{{ errorMessage }}</p>
-        </form>
-        <button
-          @click="showForm = false"
-          class="mt-4 w-full bg-red-600 text-white font-bold py-2 rounded hover:bg-red-500 transition"
-        >
-          Cancelar
-        </button>
-      </div>
-    </div>
+        </div>
+      </template>
+    </main>
   </div>
 </template>
