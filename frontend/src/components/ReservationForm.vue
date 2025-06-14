@@ -193,39 +193,5 @@ const eliminarReservation = async (id) => {
         </button>
       </div>
     </div>
-
-    <!-- Lista de reservaciones -->
-    <div class="max-w-2xl mx-auto mt-8">
-      <h3 class="text-xl font-bold mb-4 text-red-900"> Reservaciones </h3>
-      <div v-if="reservations.length === 0" class="text-gray-500">No hay reservaciones registradas.</div>
-      <table v-else
-        class="w-full min-w-[400px] text-left border-collapse text-xs sm:text-sm bg-white rounded-xl shadow-lg">
-        <thead>
-          <tr class="bg-red-100">
-            <th class="py-2 px-3 whitespace-nowrap">Nombre</th>
-            <th class="py-2 px-3 whitespace-nowrap">Correo</th>
-            <th class="py-2 px-3 whitespace-nowrap">Fecha</th>
-            <th class="py-2 px-3 whitespace-nowrap">Detalle</th>
-            <th class="py-2 px-3 whitespace-nowrap">Estado</th>
-            <th class="py-2 px-3 whitespace-nowrap">Acciones</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="resv in reservations" :key="resv._id" class="border-b hover:bg-red-50">
-            <td class="py-2 px-3">{{ resv.nombre }}</td>
-            <td class="py-2 px-3">{{ resv.email }}</td>
-            <td class="py-2 px-3">{{ resv.fecha }}</td>
-            <td class="py-2 px-3">{{ resv.detalle }}</td>
-            <td class="py-2 px-3">{{ resv.estado }}</td>
-            <td class="py-2 px-3 flex gap-2">
-              <button @click="startEditReservation(resv)"
-                class="bg-yellow-500 text-white px-3 py-1 rounded hover:bg-yellow-600">Editar</button>
-              <button @click="() => { reservationToDelete = resv; askRemoveReservation.value = true }"
-                class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700">Eliminar</button>
-            </td>
-          </tr>
-        </tbody>
-      </table>
-    </div>
   </div>
 </template>

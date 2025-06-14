@@ -97,7 +97,7 @@ watch(
         <div v-else>
           <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 sm:gap-8">
             <div v-for="servicio in serviciosPagina()" :key="servicio._id" class="bg-white rounded-xl shadow-lg p-4 flex flex-col items-center
-                     transform transition duration-300 hover:scale-105 hover:shadow-xl animate-fade-in-up">
+                      transform transition duration-300 hover:scale-105 hover:shadow-xl animate-fade-in-up">
               <img :src="servicio.imagen" :alt="servicio.nombre"
                 class="w-full h-28 sm:h-32 object-cover rounded mb-3 transition duration-300 hover:opacity-90" />
               <h3 class="font-bold text-lg text-red-700 mb-1 text-center">{{ servicio.nombre }}</h3>
