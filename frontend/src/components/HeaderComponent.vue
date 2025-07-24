@@ -102,7 +102,7 @@ const toggleCart = () => { //
         <!-- Logo -->
         <a class="flex items-center gap-2">
             <img src="./img/logoRes.jpeg" alt="Logo de la aplicación" class="w-12 h-12 md:w-14 md:h-14 rounded-full shadow-md" />
-            <span class="font-bold text-xl tracking-widest hidden sm:inline">GUS GU'S</span>
+            <span class="font-bold text-xl tracking-widest hidden sm:inline">GUS GU'S prueba</span>
         </a>
 
         <!-- Menú escritorio -->
